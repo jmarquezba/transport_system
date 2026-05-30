@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulo 1 — Predicción de Demanda · IRNA</title>
+  <meta name="description" content="Predicción de demanda de transporte turístico con LSTM. Visualiza series de tiempo históricas y pronósticos a 30 días." />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ── Navbar ─────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-brand-icon">🧠</div>
+      <div>
+        <span class="nav-brand-text">IRNA Trabajo 3</span>
+        <span class="nav-brand-sub">Universidad Nacional de Colombia</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">🏠 Inicio</a></li>
+      <li><a href="/modulo1">📈 Demanda</a></li>
+      <li><a href="/modulo2">🚗 Clasificación</a></li>
+      <li><a href="/modulo3">🌎 Recomendación</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+  <!-- ── Page Header ─────────────────────────────────────── -->
+  <div class="page-header animate-in">
+    <div class="breadcrumb">
+      <a href="/">Inicio</a> › <span>Módulo 1</span>
+    </div>
+    <div class="flex-between">
+      <div>
+        <h1 class="page-title">📈 Predicción de Demanda</h1>
+        <p class="page-subtitle">Modelo LSTM · Pronóstico de demanda turística a 30 días</p>
+      </div>
+      <span class="module-card-tag tag-purple" style="font-size:0.9rem;padding:0.4rem 1rem;">LSTM · Series de Tiempo</span>
+    </div>
+  </div>
+
+  <!-- ── Main Grid ───────────────────────────────────────── -->
+  <div class="grid-2" style="align-items:start;">
+
+    <!-- ── Control Panel ──────────────────────────────────── -->
+    <div>
+      <div class="card animate-in delay-1">
+        <h3 style="margin-bottom:1.25rem;">⚙️ Configuración</h3>
+
+        <div class="form-group">
+          <label for="destSelect">Destino turístico</label>
+          <select id="destSelect">
+            {% for d in destinations %}
+            <option value="{{ d }}">{{ d }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Horizonte de pronóstico</label>
+          <div style="padding:0.75rem 1rem;background:rgba(255,255,255,0.04);border:1px solid var(--border-light);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:0.9rem;">
+            30 días (fijo — ventana autorregresiva LSTM)
+          </div>
+        </div>
+
+        <button id="btnPredict" class="btn btn-primary btn-full" onclick="predictDemand()">
+          📊 Generar Pronóstico
+        </button>
+
+        <hr class="divider" />
+
+        <div>
+          <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;">
+            <strong style="color:var(--text-secondary);">Arquitectura LSTM:</strong><br/>
+            • 2 capas LSTM apiladas (hidden=64)<br/>
+            • Ventana deslizante: 30 días<br/>
+            • MinMaxScaler por destino<br/>
+            • Early stopping (patience=10)<br/>
+            • Pronóstico autorregresivo
+          </p>
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="card animate-in delay-2" style="margin-top:1.5rem;" id="metricsCard">
+        <h3 style="margin-bottom:1rem;">📐 Métricas del Modelo</h3>
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <div class="metric-value" id="metRMSE">—</div>
+            <div class="metric-label">RMSE</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-value" id="metMAE">—</div>
+            <div class="metric-label">MAE</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-value" id="metMAPE">—</div>
+            <div class="metric-label">MAPE %</div>
+          </div>
+        </div>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.75rem;text-align:center;">
+          Métricas calculadas sobre el conjunto de test (20% temporal)
+        </p>
+      </div>
+    </div>
+
+    <!-- ── Chart Panel ─────────────────────────────────────── -->
+    <div class="card animate-in delay-2" style="position:relative;">
+      <div id="chartLoading" class="loading-overlay hidden">
+        <div style="text-align:center;">
+          <div class="spinner" style="width:40px;height:40px;border-width:4px;margin:0 auto 1rem;"></div>
+          <p style="color:var(--text-secondary);">Ejecutando modelo LSTM...</p>
+        </div>
+      </div>
+
+      <div class="flex-between mb-2">
+        <h3>📉 Serie de Tiempo</h3>
+        <div style="display:flex;gap:0.5rem;align-items:center;font-size:0.78rem;">
+          <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:3px;background:#6c63ff;border-radius:2px;display:inline-block;"></span>Histórico</span>
+          <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:3px;background:#00d2ff;border-radius:2px;display:inline-block;"></span>Pronóstico</span>
+        </div>
+      </div>
+
+      <div id="chartEmpty" style="height:350px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-muted);">
+        <div style="font-size:3rem;margin-bottom:1rem;">📊</div>
+        <p>Selecciona un destino y genera el pronóstico</p>
+      </div>
+
+      <div class="chart-container hidden" id="chartWrap">
+        <canvas id="demandChart"></canvas>
+      </div>
+
+      <div id="forecastSummary" class="hidden" style="margin-top:1.25rem;">
+        <hr class="divider" />
+        <div style="display:flex;gap:2rem;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Destino</div>
+            <div id="summDest" style="font-weight:700;color:var(--accent-purple);margin-top:0.2rem;">—</div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Media pronóstico (viajes/día)</div>
+            <div id="summMean" style="font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent-cyan);margin-top:0.2rem;">—</div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Máximo pronóstico</div>
+            <div id="summMax" style="font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent-green);margin-top:0.2rem;">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Info Section ────────────────────────────────────── -->
+  <div class="card animate-in delay-3" style="margin-top:1.5rem;margin-bottom:3rem;">
+    <h3 class="mb-2">ℹ️ Acerca del Módulo</h3>
+    <div class="grid-3">
+      <div>
+        <h4 style="color:var(--accent-purple);margin-bottom:0.5rem;font-size:0.9rem;">📦 Dataset</h4>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">15,000 registros sintéticos con estacionalidad realista (semanal y mensual), tendencia creciente y ruido gaussiano. Top 5 destinos por volumen de viajes.</p>
+      </div>
+      <div>
+        <h4 style="color:var(--accent-cyan);margin-bottom:0.5rem;font-size:0.9rem;">🔬 Metodología</h4>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">Ventanas deslizantes de 30 días, escala MinMax por ruta, split temporal 80/10/10 (train/val/test). Pronóstico autorregresivo (la predicción t+1 alimenta a t+2).</p>
+      </div>
+      <div>
+        <h4 style="color:var(--accent-green);margin-bottom:0.5rem;font-size:0.9rem;">📌 Aplicación</h4>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">Apoya a operadores de transporte en la planificación de flota con 30 días de anticipación, minimizando subutilización y escasez en temporadas.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>🧠 <strong>IRNA · Trabajo 3</strong> · Universidad Nacional de Colombia · 2026</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+let demandChart = null;
+
+async function predictDemand() {
+  const dest = document.getElementById('destSelect').value;
+  const btn = document.getElementById('btnPredict');
+  setLoading(btn, true);
+  document.getElementById('chartLoading').classList.remove('hidden');
+  document.getElementById('chartEmpty').classList.add('hidden');
+
+  try {
+    const res = await fetch('/api/predict_demand', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ destination: dest })
+    });
+    const data = await res.json();
+    renderDemandChart(data);
+    updateMetrics(data);
+    document.getElementById('chartWrap').classList.remove('hidden');
+    document.getElementById('forecastSummary').classList.remove('hidden');
+    document.getElementById('summDest').textContent = dest;
+    const mean = (data.forecast.reduce((a,b)=>a+b,0)/data.forecast.length).toFixed(0);
+    const max  = Math.max(...data.forecast).toFixed(0);
+    document.getElementById('summMean').textContent = Number(mean).toLocaleString('es-CO');
+    document.getElementById('summMax').textContent  = Number(max).toLocaleString('es-CO');
+    showToast(`Pronóstico generado para ${dest}`, 'success');
+  } catch(e) {
+    showToast('Error al conectar con el servidor.', 'error');
+    document.getElementById('chartEmpty').classList.remove('hidden');
+  } finally {
+    setLoading(btn, false);
+    document.getElementById('chartLoading').classList.add('hidden');
+  }
+}
+
+function renderDemandChart(data) {
+  const ctx = document.getElementById('demandChart').getContext('2d');
+  if (demandChart) demandChart.destroy();
+
+  const labels = [...data.dates_hist, ...data.dates_fore];
+  const histData = [...data.historical, ...Array(30).fill(null)];
+  const foreData = [...Array(60).fill(null), ...data.forecast];
+  // Overlap point
+  foreData[59] = data.historical[59];
+
+  demandChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Histórico',
+          data: histData,
+          borderColor: '#6c63ff',
+          backgroundColor: 'rgba(108,99,255,0.08)',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: true,
+          tension: 0.3,
+          spanGaps: false,
+        },
+        {
+          label: 'Pronóstico 30 días',
+          data: foreData,
+          borderColor: '#00d2ff',
+          backgroundColor: 'rgba(0,210,255,0.08)',
+          borderWidth: 2.5,
+          borderDash: [6, 3],
+          pointRadius: 0,
+          fill: true,
+          tension: 0.3,
+          spanGaps: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: { color: '#8a9bbf', font: { family: 'Inter', size: 12 } }
+        },
+        tooltip: {
+          backgroundColor: '#0d1528',
+          borderColor: 'rgba(108,99,255,0.3)',
+          borderWidth: 1,
+          titleColor: '#f0f4ff',
+          bodyColor: '#8a9bbf',
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${Math.round(ctx.raw || 0).toLocaleString('es-CO')} viajes`
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#4a5580', font: { size: 10 }, maxTicksLimit: 10 },
+          grid: { color: 'rgba(255,255,255,0.04)' }
+        },
+        y: {
+          ticks: { color: '#4a5580', font: { size: 10 }, callback: v => v.toLocaleString('es-CO') },
+          grid: { color: 'rgba(255,255,255,0.04)' }
+        }
+      }
+    }
+  });
+}
+
+function updateMetrics(data) {
+  document.getElementById('metRMSE').textContent = data.rmse.toFixed(1);
+  document.getElementById('metMAE').textContent  = data.mae.toFixed(1);
+  document.getElementById('metMAPE').textContent = data.mape.toFixed(1) + '%';
+}
+</script>
+</body>
+</html>
