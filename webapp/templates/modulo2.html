@@ -36,7 +36,7 @@
     <div class="flex-between">
       <div>
         <h1 class="page-title">🚗 Clasificación de Conducta</h1>
-        <p class="page-subtitle">ResNet18 Transfer Learning · 10 clases de distracción al volante</p>
+        <p class="page-subtitle">ResNet18 Transfer Learning · 5 clases de comportamiento al volante</p>
       </div>
       <span class="module-card-tag tag-red" style="font-size:0.9rem;padding:0.4rem 1rem;">CNN · Transfer Learning</span>
     </div>
@@ -73,9 +73,8 @@
 
         <hr class="divider" />
         <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.6;">
-          <strong style="color:var(--text-secondary);">Modelo:</strong> ResNet18 (ImageNet) con fine-tuning en layer4.<br/>
-          <strong style="color:var(--text-secondary);">Cabeza:</strong> Dropout(0.5) → Linear(512→256) → BN → Dropout(0.3) → Linear(256→10).<br/>
-          <strong style="color:var(--text-secondary);">Entrenamiento:</strong> 20 épocas, Adam lr=1e-4, CrossEntropyLoss.
+          <strong style="color:var(--text-secondary);">Modelo:</strong> ResNet18 (ImageNet) con fine-tuning en layer4 y cabeza de 5 clases.<br/>
+          <strong style="color:var(--text-secondary);">Entrenamiento:</strong> Entrenado sobre dataset real de Kaggle (400 imgs/clase), Adam, lr=1e-4.
         </p>
       </div>
     </div>
@@ -125,15 +124,15 @@
     <div class="grid-3" style="margin-top:0.5rem;">
       <div style="font-size:0.82rem;">
         <strong style="color:var(--accent-orange);">Métricas de Evaluación:</strong><br/>
-        <span class="text-secondary">Accuracy: ~84.3% · F1-macro: 0.843</span>
+        <span class="text-secondary">Accuracy: 79.3% en validación (real)</span>
       </div>
       <div style="font-size:0.82rem;">
         <strong style="color:var(--accent-orange);">Datos:</strong><br/>
-        <span class="text-secondary">2,000 imgs (200/clase) · Split 80/20 estratificado</span>
+        <span class="text-secondary">Dataset real (7,286 imgs totales, 2,000 submuestreadas)</span>
       </div>
       <div style="font-size:0.82rem;">
         <strong style="color:var(--accent-orange);">Data Augmentation:</strong><br/>
-        <span class="text-secondary">HFlip · Rotation ± 15° · ColorJitter · Affine</span>
+        <span class="text-secondary">HFlip · Rotation ± 15° · ColorJitter</span>
       </div>
     </div>
   </div>

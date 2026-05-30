@@ -11,6 +11,34 @@ import random
 import numpy as np
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, jsonify
+import torch
+import torch.nn as nn
+import torchvision.models as models
+import torchvision.transforms as transforms
+from PIL import Image
+
+# ─────────────────────────────────────────────
+#  LOAD REAL MODEL
+# ─────────────────────────────────────────────
+# Initialize ResNet18 structure
+real_model = models.resnet18(pretrained=False)
+in_features = real_model.fc.in_features
+real_model.fc = nn.Sequential(
+    nn.Dropout(p=0.5),
+    nn.Linear(in_features, 256),
+    nn.ReLU(inplace=True),
+    nn.BatchNorm1d(256),
+    nn.Dropout(p=0.3),
+    nn.Linear(256, 5) # 5 classes in the real dataset
+)
+
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "modulo2_clasificacion", "models", "resnet18_driver.pt")
+try:
+    real_model.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
+    real_model.eval()
+    print("Modelo ResNet18 real cargado exitosamente.")
+except Exception as e:
+    print(f"Error al cargar el modelo ResNet18 real: {e}")
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max upload
@@ -74,15 +102,10 @@ DESTINATIONS_CATALOG = [
 
 DISTRACTED_DRIVING_CLASSES = [
     {"id": 0,  "name": "Conducción segura",           "name_en": "Safe driving",                     "emoji": "✅"},
-    {"id": 1,  "name": "Texteando (mano derecha)",    "name_en": "Texting - right",                  "emoji": "📱"},
-    {"id": 2,  "name": "Llamada (mano derecha)",      "name_en": "Phone call - right",               "emoji": "📞"},
-    {"id": 3,  "name": "Texteando (mano izquierda)",  "name_en": "Texting - left",                   "emoji": "📱"},
-    {"id": 4,  "name": "Llamada (mano izquierda)",    "name_en": "Phone call - left",                "emoji": "📞"},
-    {"id": 5,  "name": "Radio del auto",              "name_en": "Operating the radio",              "emoji": "🎵"},
-    {"id": 6,  "name": "Bebiendo",                    "name_en": "Drinking",                         "emoji": "🥤"},
-    {"id": 7,  "name": "Tomando al atrás",            "name_en": "Reaching behind",                  "emoji": "🤚"},
-    {"id": 8,  "name": "Maquillándose",               "name_en": "Hair and makeup",                  "emoji": "💄"},
-    {"id": 9,  "name": "Hablando con pasajero",       "name_en": "Talking to passenger",             "emoji": "💬"},
+    {"id": 1,  "name": "Girando / Mirando espejos",   "name_en": "Turning / Mirror checking",         "emoji": "🔄"},
+    {"id": 2,  "name": "Texteando al conducir",       "name_en": "Texting on phone",                 "emoji": "📱"},
+    {"id": 3,  "name": "Hablando por teléfono",       "name_en": "Talking on phone",                 "emoji": "📞"},
+    {"id": 4,  "name": "Otras actividades",           "name_en": "Other distracting activities",     "emoji": "🥤"},
 ]
 
 DEMAND_DESTINATIONS = ["Cartagena", "Bogotá", "Medellín", "Santa Marta", "San Andrés"]
@@ -185,7 +208,7 @@ def predict_demand():
 @app.route("/api/classify_image", methods=["POST"])
 def classify_image():
     """
-    Simulated ResNet18 image classification.
+    Real ResNet18 image classification.
     Accepts an image upload; returns class probabilities.
     """
     if "image" not in request.files:
@@ -195,29 +218,40 @@ def classify_image():
     if file.filename == "":
         return jsonify({"error": "Nombre de archivo vacío."}), 400
 
-    # Use filename hash for pseudo-stable predictions
-    seed = abs(hash(file.filename)) % (2**31)
-    rng = np.random.default_rng(seed)
-
-    # Generate realistic softmax-like probabilities
-    raw = rng.exponential(scale=1.0, size=10)
-    # Make one class dominant
-    dominant = int(rng.integers(0, 10))
-    raw[dominant] *= rng.uniform(6, 14)
-    probs = (raw / raw.sum()).tolist()
-
-    predicted_class = int(np.argmax(probs))
-    confidence = float(probs[predicted_class])
-
-    return jsonify({
-        "predicted_class":   predicted_class,
-        "class_name":        DISTRACTED_DRIVING_CLASSES[predicted_class]["name"],
-        "class_name_en":     DISTRACTED_DRIVING_CLASSES[predicted_class]["name_en"],
-        "emoji":             DISTRACTED_DRIVING_CLASSES[predicted_class]["emoji"],
-        "confidence":        round(confidence, 4),
-        "all_probabilities": [round(p, 4) for p in probs],
-        "classes":           DISTRACTED_DRIVING_CLASSES,
-    })
+    try:
+        # Load image via PIL
+        img = Image.open(file.stream).convert('RGB')
+        
+        # Apply standard ResNet18 transformations
+        IMAGENET_MEAN = [0.485, 0.456, 0.406]
+        IMAGENET_STD  = [0.229, 0.224, 0.225]
+        transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD)
+        ])
+        
+        tensor = transform(img).unsqueeze(0) # [1, 3, 224, 224]
+        
+        # Inference using the real model
+        with torch.no_grad():
+            outputs = real_model(tensor)
+            probs = torch.softmax(outputs, dim=1).squeeze(0).numpy().tolist()
+            
+        predicted_class = int(np.argmax(probs))
+        confidence = float(probs[predicted_class])
+        
+        return jsonify({
+            "predicted_class":   predicted_class,
+            "class_name":        DISTRACTED_DRIVING_CLASSES[predicted_class]["name"],
+            "class_name_en":     DISTRACTED_DRIVING_CLASSES[predicted_class]["name_en"],
+            "emoji":             DISTRACTED_DRIVING_CLASSES[predicted_class]["emoji"],
+            "confidence":        round(confidence, 4),
+            "all_probabilities": [round(p, 4) for p in probs],
+            "classes":           DISTRACTED_DRIVING_CLASSES,
+        })
+    except Exception as e:
+        return jsonify({"error": f"Error al procesar la imagen: {str(e)}"}), 500
 
 
 @app.route("/api/get_recommendations", methods=["POST"])
