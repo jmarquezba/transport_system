@@ -14,17 +14,16 @@
 <nav class="navbar">
   <div class="navbar-inner">
     <a href="/" class="nav-brand">
-      <div class="nav-brand-icon">🧠</div>
       <div>
-        <span class="nav-brand-text">NeuralTransit Lab</span>
-        <span class="nav-brand-sub">Universidad Nacional de Colombia</span>
+        <span class="nav-brand-text">Redes Neuronales Y Algoritmos Bioinspirados - Trabajo 3</span>
+        <span class="nav-brand-sub">Universidad Nacional Sede Medellín</span>
       </div>
     </a>
     <ul class="nav-links">
-      <li><a href="/">🏠 Inicio</a></li>
-      <li><a href="/modulo1">📈 Demanda</a></li>
-      <li><a href="/modulo2">🚗 Clasificación</a></li>
-      <li><a href="/modulo3">🌎 Recomendación</a></li>
+      <li><a href="/">Inicio</a></li>
+      <li><a href="/modulo1">Demanda</a></li>
+      <li><a href="/modulo2">Clasificación</a></li>
+      <li><a href="/modulo3">Recomendación</a></li>
     </ul>
   </div>
 </nav>
@@ -37,10 +36,9 @@
     </div>
     <div class="flex-between">
       <div>
-        <h1 class="page-title">📈 Predicción de Demanda</h1>
+        <h1 class="page-title">Predicción de Demanda</h1>
         <p class="page-subtitle">Modelo LSTM · Pronóstico de demanda turística a 30 días</p>
       </div>
-      <span class="module-card-tag tag-purple" style="font-size:0.9rem;padding:0.4rem 1rem;">LSTM · Series de Tiempo</span>
     </div>
   </div>
 
@@ -50,7 +48,7 @@
     <!-- ── Control Panel ──────────────────────────────────── -->
     <div>
       <div class="card animate-in delay-1">
-        <h3 style="margin-bottom:1.25rem;">⚙️ Configuración</h3>
+        <h3 style="margin-bottom:1.25rem;">Configuración</h3>
 
         <div class="form-group">
           <label for="destSelect">Destino turístico</label>
@@ -69,7 +67,7 @@
         </div>
 
         <button id="btnPredict" class="btn btn-primary btn-full" onclick="predictDemand()">
-          📊 Generar Pronóstico
+          Generar Pronóstico
         </button>
 
         <hr class="divider" />
@@ -88,7 +86,7 @@
 
       <!-- Metrics -->
       <div class="card animate-in delay-2" style="margin-top:1.5rem;" id="metricsCard">
-        <h3 style="margin-bottom:1rem;">📐 Métricas del Modelo</h3>
+        <h3 style="margin-bottom:1rem;">Métricas del Modelo</h3>
         <div class="metrics-grid">
           <div class="metric-box">
             <div class="metric-value" id="metRMSE">—</div>
@@ -119,7 +117,7 @@
       </div>
 
       <div class="flex-between mb-2">
-        <h3>📉 Serie de Tiempo</h3>
+        <h3>Serie de Tiempo</h3>
         <div style="display:flex;gap:0.5rem;align-items:center;font-size:0.78rem;">
           <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:3px;background:#006633;border-radius:2px;display:inline-block;"></span>Histórico</span>
           <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:3px;background:#c59b27;border-radius:2px;display:inline-block;"></span>Pronóstico</span>
@@ -127,8 +125,7 @@
       </div>
 
       <div id="chartEmpty" style="height:350px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-muted);">
-        <div style="font-size:3rem;margin-bottom:1rem;">📊</div>
-        <p>Selecciona un destino y genera el pronóstico</p>
+        <p>Selecciona un destino y genera el pronóstico para iniciar la visualización</p>
       </div>
 
       <div class="chart-container hidden" id="chartWrap">
@@ -157,26 +154,32 @@
 
   <!-- ── Info Section ────────────────────────────────────── -->
   <div class="card animate-in delay-3" style="margin-top:1.5rem;margin-bottom:3rem;">
-    <h3 class="mb-2">ℹ️ Acerca del Módulo</h3>
+    <h3 class="mb-2">Acerca del Módulo</h3>
     <div class="grid-3">
       <div>
-        <h4 style="color:var(--accent-purple);margin-bottom:0.5rem;font-size:0.9rem;">📦 Dataset</h4>
-        <p style="font-size:0.85rem;color:var(--text-secondary);">Serie temporal diaria de 5 años derivada directamente de la popularidad promedio y el rango de meses recomendados para viajar (BestTimeToVisit) del dataset real de Kaggle <code>Expanded_Destinations.csv</code>.</p>
+        <h4 style="color:var(--accent-purple);margin-bottom:0.5rem;font-size:0.9rem;">Dataset de Tránsito y Demanda</h4>
+        <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">
+          Compuesto por 15,000 registros históricos estructurados con patrones realistas y complejos de series de tiempo. Incorpora de forma explícita estacionalidad aditiva dual (ciclos diarios y semanales de tráfico urbano, junto con picos mensuales de flujo turístico), tendencias de crecimiento de largo plazo y modelado de perturbaciones estocásticas controladas de ruido gaussiano para simular condiciones reales del sistema.
+        </p>
       </div>
       <div>
-        <h4 style="color:var(--accent-cyan);margin-bottom:0.5rem;font-size:0.9rem;">🔬 Metodología</h4>
-        <p style="font-size:0.85rem;color:var(--text-secondary);">Ventanas deslizantes de 30 días, escala MinMax por ruta, split temporal 80/10/10 (train/val/test). Pronóstico autorregresivo (la predicción t+1 alimenta a t+2).</p>
+        <h4 style="color:var(--accent-cyan);margin-bottom:0.5rem;font-size:0.9rem;">Metodología del Modelo LSTM</h4>
+        <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">
+          Utiliza ventanas de observación deslizantes (sliding windows) de 30 días históricos para predecir el horizonte futuro. El preprocesamiento realiza estandarización mediante MinMaxScaler parametrizado individualmente por destino turístico. El entrenamiento se realiza con un split temporal estricto 80/10/10 (train/validation/test) usando Backpropagation Through Time (BPTT) y optimización Adam. La predicción futura es de carácter autorregresivo, donde cada salida predicha retroalimenta recurrentemente la entrada para el siguiente paso temporal.
+        </p>
       </div>
       <div>
-        <h4 style="color:var(--accent-green);margin-bottom:0.5rem;font-size:0.9rem;">📌 Aplicación</h4>
-        <p style="font-size:0.85rem;color:var(--text-secondary);">Apoya a operadores de transporte en la planificación de flota con 30 días de anticipación, minimizando subutilización y escasez en temporadas.</p>
+        <h4 style="color:var(--accent-green);margin-bottom:0.5rem;font-size:0.9rem;">Interpretación y Aplicación Operativa</h4>
+        <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">
+          Las métricas RMSE, MAE y MAPE evalúan rigurosamente las desviaciones absolutas y relativas sobre el conjunto de test. Este pronóstico de 30 días permite a los administradores y operadores logísticos del sistema de transporte prever la sobrecarga en horas pico o temporadas turísticas altas, optimizando de forma predictiva la distribución geográfica de flotas vehiculares y reduciendo tanto la subutilización como los tiempos de espera de los usuarios.
+        </p>
       </div>
     </div>
   </div>
 </div>
 
 <footer>
-  <p>🧠 <strong>NeuralTransit Lab · Trabajo 3</strong> · Universidad Nacional de Colombia · 2026</p>
+  <p><strong>Redes Neuronales Y Algoritmos Bioinspirados · Trabajo 3</strong> · Universidad Nacional Sede Medellín · 2026</p>
 </footer>
 
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>

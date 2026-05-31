@@ -227,7 +227,9 @@ code, .mono {
   text-decoration: none;
   color: inherit;
   border-top: 4px solid var(--accent-primary);
+  border-radius: 4px;
 }
+
 
 .module-card.m1 { border-top-color: var(--accent-primary); }
 .module-card.m2 { border-top-color: var(--accent-red); }
