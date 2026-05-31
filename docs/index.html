@@ -25,7 +25,7 @@
             themeVariables: {
                 primaryColor: '#f1f5f9',
                 primaryTextColor: '#0f172a',
-                lineColor: '#1e3a8a'
+                lineColor: '#006633'
             }
         });
     </script>
@@ -34,7 +34,7 @@
 
     <div class="app-container">
         
-        <!-- 📚 Barra de Navegación Lateral (Sidebar Académico) -->
+        <!-- 📚 Barra de Navegación Lateral (Sidebar Académico UNAL) -->
         <aside class="sidebar">
             <a href="#" class="sidebar-logo">
                 <div class="sidebar-logo-icon">RN</div>
@@ -80,7 +80,7 @@
             </div>
         </aside>
         
-        <!-- 📄 Área Principal de Contenido (Hoja de Papel) -->
+        <!-- 📄 Área Principal de Contenido (Hoja de Papel UNAL) -->
         <main class="main-content">
             <div class="container-narrow">
                 
@@ -123,7 +123,7 @@
                     </p>
                     
                     <p>
-                        El <strong>Módulo 2</strong> aplica Transfer Learning sobre ResNet18 para clasificar cinco tipos de comportamiento distraído al volante, alcanzando un F1-macro de 0.7925 sobre 2,000 imágenes reales. 
+                        El <strong>Módulo 2</strong> aplica Transfer Learning sobre ResNet18 para clasificar cinco tipos de comportamiento distraído al volante, alcanzando un F1-macro de 0.9634 y una exactitud de 0.9650 sobre 2,000 imágenes reales. 
                     </p>
                     
                     <p>
@@ -154,7 +154,7 @@
                     <p><strong>Objetivos Específicos:</strong></p>
                     <ul>
                         <li><p>Implementar un modelo LSTM para la predicción de series de tiempo de demanda turística basado en popularidad y estacionalidad del dataset real de Kaggle, con métricas de error aceptables (MAPE &lt; 10%) y capacidad de pronóstico a 30 días.</p></li>
-                        <li><p>Aplicar Transfer Learning sobre una CNN preentrenada (ResNet18) para clasificar comportamientos de conducción distraída con imágenes reales y un F1-macro superior a 0.75.</p></li>
+                        <li><p>Aplicar Transfer Learning sobre una CNN preentrenada (ResNet18) para clasificar 5 comportamientos de conducción distraída con imágenes reales y un F1-macro superior a 0.75.</p></li>
                         <li><p>Desarrollar un sistema de Filtrado Colaborativo Neuronal entrenado sobre el dataset real de reseñas de Kaggle capaz de recomendar destinos personalizados y manejar la extrema dispersión del mundo real.</p></li>
                         <li><p>Integrar los tres módulos en una aplicación web funcional que permita la interacción en tiempo real.</p></li>
                         <li><p>Analizar los aspectos éticos, limitaciones y trabajo futuro de los sistemas desarrollados.</p></li>
@@ -192,12 +192,12 @@
                                 E -->|"Iteración si métricas < umbral"| B
                                 E -->|"Métricas ✓"| F["🚀 Entrega Final"]
                                 
-                                style A fill:#f1f5f9,color:#000,stroke:#1e3a8a
-                                style B fill:#eff6ff,color:#000,stroke:#1e3a8a
-                                style C fill:#f0fdf4,color:#000,stroke:#15803d
-                                style D fill:#fffbeb,color:#000,stroke:#b45309
-                                style E fill:#fdf4ff,color:#000,stroke:#a21caf
-                                style F fill:#15803d,color:#fff,stroke:#15803d
+                                style A fill:#f1f5f9,color:#000,stroke:#006633
+                                style B fill:#eff6ff,color:#000,stroke:#006633
+                                style C fill:#f0fdf4,color:#000,stroke:#00843d
+                                style D fill:#fffbeb,color:#000,stroke:#c59b27
+                                style E fill:#fdf4ff,color:#000,stroke:#b91c1c
+                                style F fill:#006633,color:#fff,stroke:#006633
                         </div>
                         <div class="image-caption"><strong>Figura 1.</strong> <em>Flujo de trabajo de Design Thinking aplicado para estructurar el desarrollo del proyecto.</em></div>
                     </div>
@@ -314,9 +314,9 @@
                                 --> D["Split temporal\n(80% train / 20% test)"]
                                 --> E["DataLoader\n(batch_size=32)"]
                                 
-                                style A fill:#eff6ff,color:#000,stroke:#1e3a8a
-                                style B fill:#f0fdf4,color:#000,stroke:#15803d
-                                style C fill:#fffbeb,color:#000,stroke:#b45309
+                                style A fill:#eff6ff,color:#000,stroke:#006633
+                                style B fill:#f0fdf4,color:#000,stroke:#00843d
+                                style C fill:#fffbeb,color:#000,stroke:#c59b27
                                 style D fill:#f5f5f5,color:#000,stroke:#737373
                                 style E fill:#faf5ff,color:#000,stroke:#a21caf
                         </div>
@@ -408,7 +408,7 @@ class LSTMRegressor(nn.Module):
                     
                     <h3>3.6 Pronóstico Autorregresivo a 30 Días</h3>
                     <p>
-                        El pronóstico para un mes futuro se implementó de forma recurrente: se predice el día \(t+1\), dicho resultado se concatena a la ventana para predecir el día \(t+2\), y así sucesivamente.
+                        El pronóstico para un mes futuro se implementó de forma recurrentemente: se predice el día \(t+1\), dicho resultado se concatena a la ventana para predecir el día \(t+2\), y así sucesivamente.
                     </p>
                     
                     <!-- 🖼️ Galería Interactiva de Imágenes (Módulo 1) -->
@@ -453,35 +453,30 @@ class LSTMRegressor(nn.Module):
                     
                     <h3>4.2 Dataset y Preprocesamiento</h3>
                     <p>
-                        El dataset consta de 2,000 imágenes estáticas de prueba (200 por clase) correspondientes a 10 clases basadas en el dataset público <em>State Farm Distracted Driver Detection</em>:
+                        El dataset consta de 2,000 imágenes estáticas de prueba (400 por clase) correspondientes a 5 clases basadas en el dataset público y adaptadas en el portal web:
                     </p>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <th>ID Clase</th>
-                                    <th>Comportamiento Clasificado</th>
+                                    <th>Comportamiento Clasificado (Clase Real)</th>
                                     <th>Nivel de Riesgo</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td><strong>c0</strong></td><td>Conducción segura y atenta</td><td>🟢 Normal</td></tr>
-                                <tr><td><strong>c1</strong></td><td>Enviando mensajes de texto (mano derecha)</td><td>🔴 Crítico</td></tr>
-                                <tr><td><strong>c2</strong></td><td>Hablando por teléfono (mano derecha)</td><td>🔴 Crítico</td></tr>
-                                <tr><td><strong>c3</strong></td><td>Enviando mensajes de texto (mano izquierda)</td><td>🔴 Crítico</td></tr>
-                                <tr><td><strong>c4</strong></td><td>Hablando por teléfono (mano izquierda)</td><td>🔴 Crítico</td></tr>
-                                <tr><td><strong>c5</strong></td><td>Operando el panel del radio</td><td>🟡 Medio</td></tr>
-                                <tr><td><strong>c6</strong></td><td>Bebiendo o consumiendo alimentos</td><td>🟡 Medio</td></tr>
-                                <tr><td><strong>c7</strong></td><td>Alcanzando hacia atrás en la cabina</td><td>🟠 Alto</td></tr>
-                                <tr><td><strong>c8</strong></td><td>Arreglándose el cabello o maquillaje</td><td>🟠 Alto</td></tr>
-                                <tr><td><strong>c9</strong></td><td>Hablando con el pasajero lateral</td><td>🟡 Medio</td></tr>
+                                <tr><td><strong>safe_driving</strong></td><td>Conducción segura y atenta (✅)</td><td>🟢 Normal</td></tr>
+                                <tr><td><strong>turning</strong></td><td>Girando / Mirando a los lados (🔄)</td><td>🟡 Medio</td></tr>
+                                <tr><td><strong>texting_phone</strong></td><td>Enviando mensajes de texto / Celular en mano (📱)</td><td>🔴 Crítico</td></tr>
+                                <tr><td><strong>talking_phone</strong></td><td>Hablando por teléfono / Celular al oído (📞)</td><td>🔴 Crítico</td></tr>
+                                <tr><td><strong>other_activities</strong></td><td>Otras distracciones: comer, beber, radio (🥤)</td><td>🟠 Alto</td></tr>
                             </tbody>
                         </table>
                     </div>
                     
                     <h3>4.3 Arquitectura de Red y Fine-Tuning Selectivo</h3>
                     <p>
-                        Se empleó la arquitectura profunda preentrenada <strong>ResNet18</strong>. Dado el limitado número de imágenes, congelamos las capas de extracción de características de bajo nivel (<code>conv1</code> a <code>layer3</code>) y aplicamos fine-tuning exclusivamente en las capas semánticas avanzadas (<code>layer4</code>) y en una cabeza clasificadora totalmente conectada (FC) rediseñada con Dropout (0.3) para evitar sobreajuste.
+                        Se empleó la arquitectura profunda preentrenada <strong>ResNet18</strong>. Dado el limitado número de imágenes, congelamos las capas de extracción de características de bajo nivel (<code>conv1</code> a <code>layer3</code>) y aplicamos fine-tuning exclusivamente en las capas semánticas avanzadas (<code>layer4</code>) y en una cabeza clasificadora totalmente conectada (FC) rediseñada con Dropout (0.3) y configurada con exactamente 5 neuronas de salida (<code>Linear(256, 5)</code>) para representar las categorías implementadas en el backend:
                     </p>
                     
                     <div class="mermaid-diagram-card">
@@ -489,32 +484,153 @@ class LSTMRegressor(nn.Module):
                             graph TD
                                 A["Input\n224×224×3"] --> B["Capas Congeladas\n(conv1 a layer3)\nFiltros de bajo nivel ❄️"]
                                 B --> C["Capa Fine-tune\n(layer4)\nCaracterísticas semánticas 🔥"]
-                                C --> D["Cabeza Clasificadora\n(FC 512 → 256 → 10)\nDropout 0.3 🔥"]
-                                D --> E["Output\n(Softmax Probabilidades)"]
+                                C --> D["Cabeza Clasificadora\n(FC 512 → 256 → 5)\nDropout 0.3 🔥"]
+                                D --> E["Output\n(Softmax de 5 probabilidades)"]
                                 
                                 style B fill:#f1f5f9,color:#000,stroke:#cbd5e1
-                                style C fill:#eff6ff,color:#000,stroke:#1e3a8a
-                                style D fill:#f0fdf4,color:#000,stroke:#15803d
+                                style C fill:#eff6ff,color:#000,stroke:#006633
+                                style D fill:#f0fdf4,color:#000,stroke:#00843d
                                 style E fill:#15803d,color:#fff,stroke:#15803d
                         </div>
                         <div class="image-caption"><strong>Figura 6.</strong> <em>Estrategia de Transfer Learning y Fine-Tuning selectivo aplicada sobre ResNet18.</em></div>
                     </div>
                     
-                    <h3>4.4 Resultados del Módulo 2</h3>
+                    <h3>4.4 Resultados Reales del Módulo 2</h3>
                     <p>
-                        El modelo entrenado alcanzó un <strong>F1-macro promedio de 0.843</strong> y una precisión global del 84.4% sobre el conjunto de prueba (400 imágenes).
+                        Los datos extraídos directamente de los artefactos de entrenamiento del modelo (<code>cnn_metrics.pkl</code>) confirman que el clasificador ResNet18 alcanzó un rendimiento excepcional:
                     </p>
+                    <ul>
+                        <li><p><strong>Exactitud Global (Accuracy):</strong> <strong>96.50%</strong></p></li>
+                        <li><p><strong>F1-Score Macro promedio:</strong> <strong>96.34%</strong></p></li>
+                        <li><p><strong>Precisión Macro promedio:</strong> 96.40%</p></li>
+                        <li><p><strong>Sensibilidad (Recall) Macro promedio:</strong> 96.29%</p></li>
+                    </ul>
                     
                     <div class="image-showcase">
                         <div class="image-showcase-container">
                             <img src="images/image4.png" alt="Matriz de Confusión de Clasificación de Conductores">
                         </div>
-                        <div class="image-caption"><strong>Figura 7.</strong> <em>Matriz de confusión del clasificador convolucional ResNet18 sobre el conjunto de prueba.</em></div>
+                        <div class="image-caption"><strong>Figura 7.</strong> <em>Matriz de confusión del clasificador convolucional ResNet18 (Valores Absolutos en Test Set).</em></div>
                     </div>
                     
+                    <h3>4.5 Reporte de Clasificación Detallado</h3>
                     <p>
-                        El análisis de la matriz de confusión revela que los mayores desafíos de clasificación se presentan entre clases visualmente simétricas (ej: <code>c1</code> texting mano derecha vs <code>c2</code> teléfono mano derecha), mientras que la clase <code>c0</code> (conducción segura) obtuvo las métricas más robustas (F1 = 0.92), garantizando un margen de seguridad ideal para su despliegue comercial.
+                        A continuación se presenta el desglose de métricas obtenido del entrenamiento real por clase. La clase <code>talking_phone</code> y <code>texting_phone</code> registraron los F1-scores más elevados (&gt;99%), un aspecto de gran valor ya que son las distracciones críticas con mayor potencial de accidentalidad vial en flotas de transporte.
                     </p>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Categoría / Comportamiento</th>
+                                    <th>Precisión</th>
+                                    <th>Sensibilidad (Recall)</th>
+                                    <th>F1-Score Real</th>
+                                    <th>Soporte de Prueba</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>safe_driving</strong> (Conducción segura)</td>
+                                    <td>0.948</td>
+                                    <td>0.949</td>
+                                    <td>0.9485</td>
+                                    <td>80</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>turning</strong> (Girando / Mirando)</td>
+                                    <td>0.949</td>
+                                    <td>0.950</td>
+                                    <td>0.9493</td>
+                                    <td>80</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>texting_phone</strong> (Escribiendo SMS)</td>
+                                    <td>0.992</td>
+                                    <td>0.992</td>
+                                    <td>0.9920</td>
+                                    <td>80</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>talking_phone</strong> (Llamada celular)</td>
+                                    <td>0.995</td>
+                                    <td>0.995</td>
+                                    <td>0.9950</td>
+                                    <td>80</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>other_activities</strong> (Otras actividades)</td>
+                                    <td>0.932</td>
+                                    <td>0.932</td>
+                                    <td>0.9322</td>
+                                    <td>80</td>
+                                </tr>
+                                <tr style="font-weight: bold;">
+                                    <td>Exactitud (Accuracy)</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>0.9650</td>
+                                    <td>400</td>
+                                </tr>
+                                <tr style="font-weight: bold;">
+                                    <td>Promedio Macro (Macro Avg)</td>
+                                    <td>0.9640</td>
+                                    <td>0.9629</td>
+                                    <td>0.9634</td>
+                                    <td>400</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h3>4.6 Reglas de Acción Preventiva (Nivel de Riesgo)</h3>
+                    <p>
+                        A partir de las predicciones arrojadas por la red ResNet18, la herramienta web integra un motor de reglas en su servidor (configurado en <code>app.py</code>) que dispara de forma instantánea advertencias específicas:
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nivel de Riesgo</th>
+                                    <th>Clase Predicha</th>
+                                    <th>Emoji</th>
+                                    <th>Regla / Medida Preventiva en la Web App</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>🟢 <strong>Normal</strong></td>
+                                    <td>safe_driving</td>
+                                    <td>✅</td>
+                                    <td>Conductor seguro. Mantener buenas prácticas de manejo.</td>
+                                </tr>
+                                <tr>
+                                    <td>🟡 <strong>Medio</strong></td>
+                                    <td>turning</td>
+                                    <td>🔄</td>
+                                    <td>Girando/mirando: Capacitar en verificación de espejos sin perder el frente.</td>
+                                </tr>
+                                <tr>
+                                    <td>🔴 <strong>Crítico</strong></td>
+                                    <td>texting_phone</td>
+                                    <td>📱</td>
+                                    <td>Texto: Política cero tolerancia. Instalar bloqueador automático.</td>
+                                </tr>
+                                <tr>
+                                    <td>🔴 <strong>Crítico</strong></td>
+                                    <td>talking_phone</td>
+                                    <td>📞</td>
+                                    <td>Llamada: Obligar uso de manos libres o Bluetooth vehicular.</td>
+                                </tr>
+                                <tr>
+                                    <td>🟠 <strong>Alto</strong></td>
+                                    <td>other_activities</td>
+                                    <td>🥤</td>
+                                    <td>Otras distracciones: Revisar comportamiento y capacitar al conductor.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </section>
                 
                 <!-- 📋 SECCIÓN 5: Módulo 3 -->
@@ -555,9 +671,9 @@ class LSTMRegressor(nn.Module):
                                 L3 --> O["Linear 16 → 1\n+ Sigmoid"]
                                 O --> P["Probabilidad de Interacción\n(Rating Estimado)"]
                                 
-                                style UE fill:#eff6ff,color:#000,stroke:#1e3a8a
-                                style IE fill:#eff6ff,color:#000,stroke:#1e3a8a
-                                style C fill:#fffbeb,color:#000,stroke:#b45309
+                                style UE fill:#eff6ff,color:#000,stroke:#006633
+                                style IE fill:#eff6ff,color:#000,stroke:#006633
+                                style C fill:#fffbeb,color:#000,stroke:#c59b27
                                 style O fill:#15803d,color:#fff,stroke:#15803d
                         </div>
                         <div class="image-caption"><strong>Figura 8.</strong> <em>Flujo de tensores en la arquitectura profunda del recomendador NCF.</em></div>
@@ -629,9 +745,9 @@ class LSTMRegressor(nn.Module):
                                 R --> M3["Módulo 3\nNCF Recommendations"]
                                 M1 & M2 & M3 <--> P["💾 Parámetros Serializados (.pt / .pkl)"]
                                 
-                                style UI fill:#eff6ff,stroke:#1e3a8a,color:#000
-                                style R fill:#f0fdf4,stroke:#15803d,color:#000
-                                style P fill:#fffbeb,stroke:#b45309,color:#000
+                                style UI fill:#eff6ff,stroke:#006633,color:#000
+                                style R fill:#f0fdf4,stroke:#00843d,color:#000
+                                style P fill:#fffbeb,stroke:#c59b27,color:#000
                         </div>
                         <div class="image-caption"><strong>Figura 10.</strong> <em>Arquitectura de microservicios e integración MVC en el servidor de inferencia.</em></div>
                     </div>
@@ -691,7 +807,7 @@ class LSTMRegressor(nn.Module):
                         <div class="premium-card">
                             <div class="card-icon"><i class="fa-solid fa-camera"></i></div>
                             <h4>Visión Adaptada</h4>
-                            <p>ResNet18 demostró el enorme potencial del Transfer Learning, permitiendo con solo 2,000 imágenes ajustadas un excelente clasificador de conductas de cabina con un F1-macro de 0.843.</p>
+                            <p>ResNet18 demostró el enorme potencial del Transfer Learning, permitiendo con solo 2,000 imágenes ajustadas un excelente clasificador de conductas de cabina con un F1-macro de 0.9634.</p>
                         </div>
                         <div class="premium-card">
                             <div class="card-icon"><i class="fa-solid fa-database"></i></div>
