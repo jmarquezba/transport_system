@@ -32,7 +32,11 @@ real_model.fc = nn.Sequential(
     nn.Linear(256, 5) # 5 classes in the real dataset
 )
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "modulo2_clasificacion", "models", "resnet18_driver.pt")
+# Load weights (check local folder first for deployment, then fallback to parent folder)
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "resnet18_driver.pt")
+if not os.path.exists(MODEL_PATH):
+    MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "modulo2_clasificacion", "models", "resnet18_driver.pt")
+
 try:
     real_model.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
     real_model.eval()
@@ -305,4 +309,8 @@ def get_recommendations():
 # ─────────────────────────────────────────────
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # Dynamic port binding for production environments (e.g., Render/Heroku)
+    port = int(os.environ.get("PORT", 5000))
+    # Bind to 0.0.0.0 to allow external access, debug mode enabled only in development
+    debug_mode = os.environ.get("FLASK_DEBUG", "False").lower() in ("true", "1", "t")
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)
