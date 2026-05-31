@@ -9,20 +9,20 @@
 </head>
 <body>
 
+<!-- ── Navbar ─────────────────────────────────────────────── -->
 <nav class="navbar">
   <div class="navbar-inner">
     <a href="/" class="nav-brand">
-      <div class="nav-brand-icon">🧠</div>
       <div>
-        <span class="nav-brand-text">NeuralTransit Lab</span>
-        <span class="nav-brand-sub">Universidad Nacional de Colombia</span>
+        <span class="nav-brand-text">Redes Neuronales Y Algoritmos Bioinspirados - Trabajo 3</span>
+        <span class="nav-brand-sub">Universidad Nacional Sede Medellín</span>
       </div>
     </a>
     <ul class="nav-links">
-      <li><a href="/">🏠 Inicio</a></li>
-      <li><a href="/modulo1">📈 Demanda</a></li>
-      <li><a href="/modulo2">🚗 Clasificación</a></li>
-      <li><a href="/modulo3">🌎 Recomendación</a></li>
+      <li><a href="/">Inicio</a></li>
+      <li><a href="/modulo1">Demanda</a></li>
+      <li><a href="/modulo2">Clasificación</a></li>
+      <li><a href="/modulo3">Recomendación</a></li>
     </ul>
   </div>
 </nav>
@@ -34,10 +34,9 @@
     </div>
     <div class="flex-between">
       <div>
-        <h1 class="page-title">🌎 Sistema de Recomendación</h1>
+        <h1 class="page-title">Sistema de Recomendación</h1>
         <p class="page-subtitle">Neural Collaborative Filtering · Top-5 destinos personalizados</p>
       </div>
-      <span class="module-card-tag tag-cyan" style="font-size:0.9rem;padding:0.4rem 1rem;">NCF · Embeddings</span>
     </div>
   </div>
 
@@ -46,19 +45,19 @@
     <!-- ── Control Panel ────────────────────────────────────── -->
     <div>
       <div class="card animate-in delay-1">
-        <h3 style="margin-bottom:1.25rem;">👤 Selección de Usuario</h3>
+        <h3 style="margin-bottom:1.25rem;">Selección de Usuario</h3>
 
         <div class="form-group">
           <label for="userIdInput">ID de Usuario (0 — 499)</label>
           <div style="display:flex;gap:0.75rem;">
             <input type="number" id="userIdInput" value="42" min="0" max="499" step="1" placeholder="Ingresa un ID (0-499)" />
-            <button class="btn btn-secondary" onclick="randomUser()" title="Usuario aleatorio" style="flex-shrink:0;padding:0.75rem 1rem;">🎲</button>
+            <button class="btn btn-secondary" onclick="randomUser()" title="Usuario aleatorio" style="flex-shrink:0;padding:0.75rem 1rem;">Aleatorio</button>
           </div>
           <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.4rem;">El modelo fue entrenado con 500 usuarios (ID 0–499)</div>
         </div>
 
         <button id="btnRecommend" class="btn btn-teal btn-full" onclick="getRecommendations()">
-          🌟 Obtener Recomendaciones
+          Obtener Recomendaciones
         </button>
 
         <hr class="divider" />
@@ -103,7 +102,7 @@
         </div>
 
         <div class="flex-between mb-2">
-          <h3>🎯 Top-5 Recomendaciones</h3>
+          <h3>Top-5 Recomendaciones</h3>
           <div id="userBadge" class="hidden">
             <span style="font-size:0.78rem;color:var(--text-muted);">Usuario</span>
             <span id="displayUserId" style="font-family:'JetBrains Mono',monospace;color:var(--accent-cyan);font-weight:700;margin-left:0.4rem;">#—</span>
@@ -111,8 +110,7 @@
         </div>
 
         <div id="recEmpty" style="text-align:center;padding:3rem 1rem;color:var(--text-muted);">
-          <div style="font-size:3rem;margin-bottom:1rem;">🗺️</div>
-          <p>Ingresa un ID de usuario y obtén recomendaciones personalizadas</p>
+          <p>Ingresa un ID de usuario y obtén recomendaciones personalizadas del modelo</p>
         </div>
 
         <div id="recContent" class="hidden">
@@ -124,38 +122,46 @@
 
   <!-- ── How it Works ────────────────────────────────────── -->
   <div class="card animate-in delay-3" style="margin-top:1.5rem;margin-bottom:3rem;">
-    <h3 class="mb-2">🔬 ¿Cómo funciona el NCF?</h3>
+    <h3 class="mb-2">¿Cómo funciona el Neural Collaborative Filtering (NCF)?</h3>
     <div class="grid-3">
       <div style="text-align:center;padding:1rem;">
-        <div style="font-size:2.5rem;margin-bottom:0.75rem;">1️⃣</div>
-        <h4 style="color:var(--accent-purple);margin-bottom:0.5rem;">Embeddings</h4>
-        <p style="font-size:0.85rem;color:var(--text-secondary);">Cada usuario y destino tiene un vector denso de 32 dimensiones que captura sus características latentes.</p>
+        <div style="font-family:'Lora', serif; font-size:2rem; font-weight:700; color:var(--accent-purple); margin-bottom:0.75rem;">1</div>
+        <h4 style="color:var(--accent-purple);margin-bottom:0.5rem;">Embeddings Latentes</h4>
+        <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">
+          Cada identificador único de usuario y de destino se mapea a un espacio continuo a través de capas de proyección de baja dimensionalidad (Embeddings 32D). Estos vectores densos aprenden a codificar de forma compacta e implícita las características latentes de los viajeros (preferencias de clima, costo) y atributos de los destinos.
+        </p>
       </div>
       <div style="text-align:center;padding:1rem;">
-        <div style="font-size:2.5rem;margin-bottom:0.75rem;">2️⃣</div>
+        <div style="font-family:'Lora', serif; font-size:2rem; font-weight:700; color:var(--accent-cyan); margin-bottom:0.75rem;">2</div>
         <h4 style="color:var(--accent-cyan);margin-bottom:0.5rem;">MLP de Interacción</h4>
-        <p style="font-size:0.85rem;color:var(--text-secondary);">Los embeddings se concatenan [64D] y pasan por 4 capas MLP con ReLU y Dropout para aprender interacciones no lineales.</p>
+        <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">
+          Los vectores correspondientes al usuario e ítem se concatenan formando una representación combinada de 64 dimensiones. Esta entrada alimenta un Perceptrón Multicapa (MLP) de 4 capas densas con reducción geométrica lineal [64 → 32 → 16 → 1] con activaciones ReLU y regularización por Dropout, permitiendo aprender interacciones no lineales profundas.
+        </p>
       </div>
       <div style="text-align:center;padding:1rem;">
-        <div style="font-size:2.5rem;margin-bottom:0.75rem;">3️⃣</div>
+        <div style="font-family:'Lora', serif; font-size:2rem; font-weight:700; color:var(--accent-green); margin-bottom:0.75rem;">3</div>
         <h4 style="color:var(--accent-green);margin-bottom:0.5rem;">Ranking Top-K</h4>
-        <p style="font-size:0.85rem;color:var(--text-secondary);">Para recomendar, se predice la probabilidad de interacción con todos los destinos y se seleccionan los 5 con mayor score.</p>
+        <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">
+          La última capa del MLP utiliza una función de activación Sigmoide para proyectar el resultado en un rango continuo $[0, 1]$, interpretado como el score de afinidad o probabilidad de interacción. Para el usuario seleccionado, se calculan las predicciones frente a todos los destinos del catálogo y se ordenan de manera decreciente para retornar el ranking de las 5 recomendaciones óptimas.
+        </p>
       </div>
     </div>
     <hr class="divider" />
     <div class="grid-2">
-      <div style="font-size:0.85rem;">
-        <strong style="color:var(--text-secondary);">Dataset sintético:</strong> 500 usuarios, 50 destinos latinoamericanos, ~8,000 interacciones con sesgo de preferencia por perfil (playa, ciudad, aventura…)
+      <div style="font-size:0.85rem; line-height:1.6;">
+        <strong style="color:var(--text-secondary);">Composición del Dataset Sintético:</strong><br/>
+        <span class="text-secondary">Modelado para representar el comportamiento de 500 usuarios individuales frente a un catálogo de 50 destinos turísticos en Latinoamérica. Cuenta con aproximadamente 8,000 interacciones implícitas diseñadas con un sesgo controlado de gustos y perfiles (ej. afinidad de usuarios jóvenes por destinos de playa o de aventura en el Caribe), posibilitando una evaluación robusta del modelo de recomendación profunda.</span>
       </div>
-      <div style="font-size:0.85rem;">
-        <strong style="color:var(--text-secondary);">Evaluación:</strong> Precision@K, Recall@K y NDCG@K calculados sobre el 20% de test. El modelo supera en <strong style="color:var(--accent-green);">+27%</strong> al baseline de popularidad en Precision@5.
+      <div style="font-size:0.85rem; line-height:1.6;">
+        <strong style="color:var(--text-secondary);">Análisis de Resultados de Ranking:</strong><br/>
+        <span class="text-secondary">El rendimiento del modelo NCF es evaluado mediante las métricas Precision@5, Recall@5 y NDCG@10 (Normalized Discounted Cumulative Gain), que penaliza de forma logarítmica los errores en posiciones altas del ranking. En el conjunto de prueba (20% de interacciones excluidas del entrenamiento), el recomendador profundo supera en un <strong>+27%</strong> de precisión al modelo baseline tradicional basado únicamente en popularidad histórica.</span>
       </div>
     </div>
   </div>
 </div>
 
 <footer>
-  <p>🧠 <strong>NeuralTransit Lab · Trabajo 3</strong> · Universidad Nacional de Colombia · 2026</p>
+  <p><strong>Redes Neuronales Y Algoritmos Bioinspirados · Trabajo 3</strong> · Universidad Nacional Sede Medellín · 2026</p>
 </footer>
 
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
@@ -193,7 +199,7 @@ async function getRecommendations() {
     showToast('Error al conectar con el servidor.', 'error');
     document.getElementById('recEmpty').classList.remove('hidden');
   } finally {
-    setLoading(btn, false, '🌟 Obtener Recomendaciones');
+    setLoading(btn, false, 'Obtener Recomendaciones');
     document.getElementById('recLoading').classList.add('hidden');
   }
 }
@@ -209,17 +215,16 @@ function renderRecommendations(data) {
     card.style.opacity = '0';
 
     const catBadge = categoryBadge(rec.category);
-    const rankEmojis = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
 
     card.innerHTML = `
-      <div class="rec-rank">${rankEmojis[idx] || rec.rank}</div>
+      <div class="rec-rank">#${rec.rank}</div>
       <div class="rec-info">
         <div class="rec-name">${rec.destination}</div>
         <div class="rec-desc">${rec.description}</div>
         <div class="rec-meta">
           ${catBadge}
-          <span class="badge badge-default">🌍 ${rec.country}</span>
-          <span class="rec-cost">💰 USD ${rec.cost_usd.toLocaleString()}</span>
+          <span class="badge badge-default">${rec.country}</span>
+          <span class="rec-cost">USD ${rec.cost_usd.toLocaleString()}</span>
         </div>
       </div>
       <div class="rec-score-wrap">
