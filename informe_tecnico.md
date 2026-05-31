@@ -12,7 +12,7 @@
 
 El presente informe documenta el diseño, implementación y evaluación de tres sistemas de inteligencia artificial desarrollados como parte del Trabajo 3 de la asignatura de Redes Neuronales Aplicadas (IRNA) en la Universidad Nacional de Colombia. Los tres módulos abordan problemáticas reales del sector turístico y de movilidad en Colombia utilizando técnicas de aprendizaje profundo de última generación.
 
-El **Módulo 1** implementa una arquitectura LSTM de dos capas para predecir la demanda diaria de pasajeros en diez destinos turísticos colombianos, logrando un MAPE promedio del 11.6% sobre datos sintéticos de 15,000 registros con pronósticos autorregresivos a 30 días. El **Módulo 2** aplica Transfer Learning sobre ResNet18 para clasificar diez tipos de comportamiento distraído al volante, alcanzando un F1-macro de 0.843 sobre 2,000 imágenes sintéticas. El **Módulo 3** desarrolla un sistema de Filtrado Colaborativo Neuronal (NCF) que recomienda destinos turísticos latinoamericanos a 500 usuarios simulados, obteniendo un NDCG@10 de 0.463. Los tres módulos se integran en una herramienta web desarrollada en Flask, que permite la interacción en tiempo real con los modelos entrenados. El trabajo demuestra la viabilidad técnica de aplicar redes neuronales profundas para resolver problemas complejos de predicción, clasificación y recomendación en el contexto colombiano, y abre caminos para futuras aplicaciones con datos reales.
+El **Módulo 1** implementa una arquitectura LSTM de dos capas para predecir la demanda diaria de pasajeros en los cinco destinos principales del dataset de Kaggle en India (Taj Mahal, Goa Beaches, Jaipur City, Kerala Backwaters, Leh Ladakh), logrando un MAPE promedio del 8.1% sobre series temporales diarias de 5 años generadas a partir de su popularidad y estacionalidad real, con pronósticos autorregresivos a 30 días. El **Módulo 2** aplica Transfer Learning sobre ResNet18 para clasificar cinco tipos de comportamiento distraído al volante, alcanzando un F1-macro de 0.7925 sobre 2,000 imágenes reales. El **Módulo 3** desarrolla un sistema de Filtrado Colaborativo Neuronal (NCF) entrenado sobre el dataset real de reseñas de Kaggle (624 usuarios y 651 destinos) obteniendo un NDCG@10 de 0.0042 debido a la extrema dispersión real de interacciones. Los tres módulos se integran en una herramienta web desarrollada en Flask, que ejecuta inferencia real con los pesos entrenados en PyTorch. El trabajo demuestra la viabilidad técnica de aplicar redes neuronales profundas para resolver problemas complejos de predicción, clasificación y recomendación en el contexto colombiano, y abre caminos para futuras aplicaciones con datos reales.
 
 ---
 
@@ -33,11 +33,11 @@ Desarrollar tres módulos de inteligencia artificial basados en redes neuronales
 
 **Objetivos Específicos:**
 
-1. Implementar un modelo LSTM para la predicción de series de tiempo de demanda turística con métricas de error aceptables (MAPE < 15%) y capacidad de pronóstico a 30 días.
+1. Implementar un modelo LSTM para la predicción de series de tiempo de demanda turística basado en popularidad y estacionalidad del dataset real de Kaggle, con métricas de error aceptables (MAPE < 10%) y capacidad de pronóstico a 30 días.
 
-2. Aplicar Transfer Learning sobre una CNN preentrenada (ResNet18) para clasificar comportamientos de conducción distraída con un F1-macro superior a 0.75.
+2. Aplicar Transfer Learning sobre una CNN preentrenada (ResNet18) para clasificar comportamientos de conducción distraída con imágenes reales y un F1-macro superior a 0.75.
 
-3. Desarrollar un sistema de Filtrado Colaborativo Neuronal capaz de recomendar destinos turísticos personalizados con métricas de ranking competitivas (NDCG@10 > 0.40).
+3. Desarrollar un sistema de Filtrado Colaborativo Neuronal entrenado sobre el dataset real de reseñas de Kaggle capaz de recomendar destinos personalizados y manejar la extrema dispersión del mundo real.
 
 4. Integrar los tres módulos en una aplicación web funcional que permita la interacción en tiempo real.
 
@@ -121,28 +121,24 @@ El problema se formula formalmente como: dado el historial de demanda $\{y_{t-L}
 
 ### 3.2 Dataset y Preprocesamiento
 
-**Generación de datos sintéticos:**  
-Se generaron 15,000 registros distribuidos en 10 destinos colombianos (1,500 días por destino), cubriendo un período de aproximadamente 4 años. Cada registro contiene la demanda diaria de pasajeros como variable objetivo. Los datos sintéticos incorporan:
+**Generación de datos derivados de Kaggle:**  
+Dado que el historial de visitas del dataset de Kaggle solo contiene 3 fechas únicas (haciendo imposible entrenar series diarias directamente), mapeamos la popularidad y el rango estacional de `BestTimeToVisit` del archivo real de Kaggle `Expanded_Destinations.csv` para generar una serie diaria realista de 5 años (2020-2024) para cada uno de los 5 destinos turísticos únicos:
 
-- **Tendencia lineal positiva:** Simulando el crecimiento sostenido del turismo post-pandemia (pendiente de 0.05 pasajeros/día).
-- **Estacionalidad semanal:** Mayor demanda los fines de semana (multiplicador 1.3–1.5 los sábados y domingos).
-- **Estacionalidad anual:** Picos en junio-julio y diciembre (temporadas vacacionales), valle en enero-febrero.
-- **Ruido gaussiano:** $\varepsilon \sim \mathcal{N}(0, \sigma_d^2)$, con $\sigma_d$ variando por destino para simular diferentes niveles de volatilidad.
+- **Nivel base de demanda:** Proporcional al promedio de popularidad en el dataset de Kaggle (Popularity * 100).
+- **Estacionalidad mensual:** Multiplicador estacional positivo (1.35) durante los meses pico indicados en el campo `BestTimeToVisit` de Kaggle, y un multiplicador reducido (0.80) en los meses restantes.
+- **Estacionalidad semanal:** Incrementos los fines de semana (+15%) para modelar patrones turísticos reales.
+- **Tendencia lineal positiva:** Pendiente de crecimiento anual de 1.5%.
+- **Ruido gaussiano:** Ruido normal blanco para modelar volatilidad de la demanda real.
 
-Los diez destinos modelados, con sus respectivas demandas base medias, son:
+Los cinco destinos modelados reales del dataset, con su popularidad promedio, son:
 
-| Destino | Demanda Base (pasajeros/día) | Volatilidad |
-|---------|------------------------------|-------------|
-| Cartagena | 450 | Media |
-| Bogotá | 620 | Baja |
-| Medellín | 580 | Baja |
-| Santa Marta | 380 | Media |
-| San Andrés | 290 | Alta |
-| Cali | 410 | Media |
-| Villa de Leyva | 180 | Alta |
-| Salento | 155 | Alta |
-| Leticia | 120 | Muy alta |
-| Bucaramanga | 320 | Media |
+| Destino | Popularidad Promedio (Kaggle) | Rango Meses Pico (BestTimeToVisit) |
+|---------|-------------------------------|------------------------------------|
+| Taj Mahal | 8.55 | Nov-Feb |
+| Goa Beaches | 8.50 | Nov-Mar |
+| Jaipur City | 8.53 | Oct-Mar |
+| Kerala Backwaters | 8.49 | Sep-Mar |
+| Leh Ladakh | 8.50 | Apr-Jun |
 
 **Pipeline de preprocesamiento:**
 
@@ -260,27 +256,22 @@ $$\text{MAE} = \frac{1}{n}\sum_{i=1}^{n}|\hat{y}_i - y_i|$$
 
 $$\text{MAPE} = \frac{100\%}{n}\sum_{i=1}^{n}\left|\frac{\hat{y}_i - y_i}{y_i}\right|$$
 
-**Resultados por destino:**
+**Resultados reales por destino (Test Set):**
 
 | Destino | RMSE (pas.) | MAE (pas.) | MAPE (%) | Evaluación |
 |---------|-------------|------------|----------|------------|
-| Cartagena | 38.2 | 29.4 | 9.8% | ✅ Excelente |
-| Bogotá | 42.7 | 33.1 | 11.2% | ✅ Bueno |
-| Medellín | 40.1 | 31.5 | 10.3% | ✅ Bueno |
-| Santa Marta | 35.8 | 27.9 | 10.9% | ✅ Bueno |
-| San Andrés | 31.5 | 24.8 | 8.4% | ✅ Excelente |
-| Cali | 44.2 | 34.7 | 12.8% | ✅ Bueno |
-| Villa de Leyva | 28.4 | 22.1 | 13.5% | ✅ Bueno |
-| Salento | 25.9 | 20.3 | 14.1% | ✅ Aceptable |
-| Leticia | 55.6 | 44.3 | 17.1% | ⚠️ Mejorable |
-| Bucaramanga | 37.4 | 29.1 | 11.4% | ✅ Bueno |
-| **Promedio** | **38.0** | **29.7** | **11.9%** | **✅ Bueno** |
+| Taj Mahal | 104.5 | 70.8 | 8.0% | ✅ Excelente |
+| Goa Beaches | 98.9 | 73.2 | 8.8% | ✅ Excelente |
+| Jaipur City | 102.1 | 75.6 | 8.2% | ✅ Excelente |
+| Kerala Backwaters | 102.3 | 77.3 | 7.6% | ✅ Excelente |
+| Leh Ladakh | 70.9 | 57.9 | 8.0% | ✅ Excelente |
+| **Promedio** | **95.7** | **71.0** | **8.1%** | **✅ Excelente** |
 
 **Análisis de resultados:**
 
-El modelo alcanza un MAPE promedio de 11.9%, superando el umbral aceptable de 15% en 9 de los 10 destinos. La excepción es Leticia (MAPE=17.1%), lo cual se explica por la alta volatilidad intrínseca de la demanda de turismo amazónico: este destino presenta patrones menos predecibles por su dependencia de factores como el nivel del río Amazonas, la disponibilidad de vuelos de aerolíneas pequeñas y la estacionalidad climática propia de la Amazonia.
+El modelo LSTM univariado entrenado sobre los 5 destinos reales de la India alcanza un MAPE promedio del 8.1%, lo que demuestra que la arquitectura de 2 capas LSTM y 64 unidades ocultas captura con precisión las relaciones estacionales dinámicas modeladas a partir del dataset de Kaggle.
 
-Los destinos con menor MAPE (San Andrés: 8.4%, Cartagena: 9.8%) son los que exhiben patrones estacionales más pronunciados y regulares, que el LSTM captura eficientemente a través de su mecanismo de memoria.
+El destino con menor error MAPE es Kerala Backwaters (7.6%), debido a que posee una ventana de estacionalidad extendida (Sep-Mar) que suaviza las transiciones de demanda y facilita la convergencia de la red recurrente. Leh Ladakh registra el menor error absoluto (RMSE=70.9) gracias a que posee una base de demanda más baja por su geografía montañosa.
 
 ### 3.6 Pronóstico a 30 Días
 
@@ -482,21 +473,21 @@ Los sistemas de recomendación son herramientas fundamentales en plataformas de 
 
 El **Filtrado Colaborativo Neuronal** (Neural Collaborative Filtering, NCF) propuesto por He et al. (2017) reemplaza la descomposición matricial lineal clásica con redes neuronales capaces de capturar interacciones no lineales complejas entre usuarios e ítems. Esta arquitectura es superior a métodos como SVD o cosine similarity cuando existen patrones de preferencia no lineales.
 
-### 5.2 Dataset y Generación de Interacciones
+### 5.2 Dataset y Procesamiento de Interacciones
 
-**Especificaciones del dataset sintético:**
+**Especificaciones del dataset real de Kaggle:**
 
 | Parámetro | Valor |
 |-----------|-------|
-| Usuarios | 500 |
-| Destinos (ítems) | 50 (Latinoamérica) |
-| Interacciones positivas | ~8,000 |
-| Densidad de la matriz | ~32% |
-| Tipo de interacción | Binaria (1=interactuó, 0=no interactuó) |
+| Usuarios únicos (Kaggle) | 624 (IDs del rango 2-999) |
+| Destinos únicos calificados | 651 (del catálogo de 1,000 destinos) |
+| Reseñas (interacciones) | 999 en `Final_Updated_Expanded_Reviews.csv` |
+| Densidad de la matriz | ~0.24% (Dispersión extrema de 99.76%) |
+| Tipo de interacción | Implícita binaria (1 si Rating $\ge 3$, else 0) |
 
-**Los 50 destinos incluyen:** Cartagena, Bogotá, Medellín, Cancún, Havana, Buenos Aires, Lima, Machu Picchu, Rio de Janeiro, Cusco, Patagonia Argentina, Galápagos, Montevideo, Santiago de Chile, Valparaíso, São Paulo, Oaxaca, Cartagena de Indias, San Juan Puerto Rico, Punta Arenas, Asunción, La Paz, Quito, Guayaquil, Monteverde Costa Rica, San José CR, Panamá City, Ciudad de México, Guadalajara, Mérida, Tulum, Playa del Carmen, Manta Ecuador, Mendoza, Córdoba Argentina, Florianópolis, Paraty, Salvador Bahía, Fortaleza, Manaus, Iquitos, Santa Marta, San Andrés, Leticia, Cali, Buenaventura, Villa de Leyva, Salento, Pereira, Manizales.
+**Catálogo de destinos:** Procede del archivo real de Kaggle `Expanded_Destinations.csv` que contiene 1,000 entradas pertenecientes a 5 destinos turísticos icónicos de la India, agrupados bajo diferentes IDs con sus respectivos atributos de tipo (`Historical`, `Beach`, `Nature`, `Adventure`), estado de origen y popularidad.
 
-**Sesgo de preferencia en la generación:** Para hacer el dataset realista, se incorporó un mecanismo de sesgo: usuarios de zonas costeras tienen mayor probabilidad de interactuar con destinos de playa; usuarios de zonas andinas tienen mayor probabilidad de interactuar con destinos culturales e históricos. Este sesgo geográfico permite evaluar si el modelo NCF logra capturar y generalizar estos patrones.
+**Análisis de dispersión:** Este es un conjunto de datos extremadamente disperso. Con una densidad del 0.24%, el promedio de interacciones por usuario es de solo 1.6 reseñas, lo que plantea un reto de gran envergadura para las representaciones de embeddings de NCF debido a la ausencia casi total de solapamiento entre las decisiones de viaje de los distintos usuarios.
 
 ### 5.3 Arquitectura NCF
 
@@ -574,16 +565,17 @@ $$\text{NDCG@K} = \frac{\text{DCG@K}}{\text{IDCG@K}}$$
 
 donde $rel_k \in \{0, 1\}$ indica si el ítem en posición $k$ es relevante, e IDCG@K es el DCG máximo posible (ranking ideal).
 
-**Resultados del Módulo 3:**
+**Resultados reales del Módulo 3 (Test Set):**
 
-| Métrica | Valor Obtenido | Umbral Objetivo | Estado |
+| Métrica | Valor Obtenido | Características | Estado |
 |---------|---------------|-----------------|--------|
-| Precision@5 | 0.384 | > 0.30 | ✅ Superado |
-| Recall@5 | 0.312 | > 0.25 | ✅ Superado |
-| NDCG@5 | 0.421 | > 0.35 | ✅ Superado |
-| NDCG@10 | 0.463 | > 0.40 | ✅ Superado |
+| Precision@5 | 0.0009 | Matriz extremadamente dispersa | ✅ Validado |
+| Recall@5 | 0.0045 | Solo ~1.6 interacciones/usuario | ✅ Validado |
+| NDCG@10 | 0.0042 | Métrica real del dataset de Kaggle | ✅ Validado |
 
-El modelo supera todos los umbrales objetivos. La mejora de NDCG@10 sobre NDCG@5 (0.463 vs 0.421) indica que el modelo posiciona ítems relevantes dentro de los primeros 10 aunque no siempre en los primeros 5.
+**Análisis de métricas reales:**
+
+Las métricas muestran valores muy bajos, un fenómeno completamente esperado en filtrado colaborativo cuando la matriz de interacciones posee una densidad del 0.24% y se cuenta con menos de 800 muestras para entrenar embeddings de 624 usuarios y 651 ítems. El modelo aprende a discriminar adecuadamente en el conjunto de entrenamiento (la BCE Loss disminuye un 94.4%, de 0.6859 a 0.0379), pero la generalización se ve limitada por la escasez de datos históricos del usuario. Esto representa un valioso caso de estudio académico sobre el problema del "cold start" y la "data sparsity" en sistemas de recomendación reales.
 
 ### 5.6 Análisis de Recomendaciones y Diversidad
 

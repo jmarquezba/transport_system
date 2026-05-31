@@ -63,3 +63,8 @@ config_local.py
 
 # Kaggle credentials (NEVER commit these)
 kaggle.json
+
+# Modelos pre-entrenados en webapp/models/ SÍ se commitean
+# (overrides de las reglas *.pt / *.pkl arriba)
+!webapp/models/*.pt
+!webapp/models/*.pkl

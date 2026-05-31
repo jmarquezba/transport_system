@@ -49,12 +49,12 @@
         <h3 style="margin-bottom:1.25rem;">👤 Selección de Usuario</h3>
 
         <div class="form-group">
-          <label for="userIdInput">ID de Usuario (0 — 499)</label>
+          <label for="userIdInput">ID de Usuario (2 — 999)</label>
           <div style="display:flex;gap:0.75rem;">
-            <input type="number" id="userIdInput" value="42" min="0" max="499" step="1" placeholder="Ingresa un ID (0-499)" />
+            <input type="number" id="userIdInput" value="327" min="2" max="999" step="1" placeholder="Ej. 12, 327, 783" />
             <button class="btn btn-secondary" onclick="randomUser()" title="Usuario aleatorio" style="flex-shrink:0;padding:0.75rem 1rem;">🎲</button>
           </div>
-          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.4rem;">El modelo fue entrenado con 500 usuarios (ID 0–499)</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.4rem;">El modelo fue entrenado con 624 usuarios únicos reales del dataset de reseñas de Kaggle (rango 2-999).</div>
         </div>
 
         <button id="btnRecommend" class="btn btn-teal btn-full" onclick="getRecommendations()">
@@ -67,15 +67,15 @@
         <h4 style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.05em;">Métricas del Modelo NCF</h4>
         <div class="metrics-grid">
           <div class="metric-box">
-            <div class="metric-value" style="font-size:1.3rem;color:var(--accent-purple);">0.384</div>
+            <div class="metric-value" style="font-size:1.3rem;color:var(--accent-purple);">0.0009</div>
             <div class="metric-label">Precision@5</div>
           </div>
           <div class="metric-box">
-            <div class="metric-value" style="font-size:1.3rem;color:var(--accent-cyan);">0.312</div>
+            <div class="metric-value" style="font-size:1.3rem;color:var(--accent-cyan);">0.0045</div>
             <div class="metric-label">Recall@5</div>
           </div>
           <div class="metric-box">
-            <div class="metric-value" style="font-size:1.3rem;color:var(--accent-green);">0.463</div>
+            <div class="metric-value" style="font-size:1.3rem;color:var(--accent-green);">0.0042</div>
             <div class="metric-label">NDCG@10</div>
           </div>
         </div>
@@ -84,10 +84,10 @@
         <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.6;">
           <strong style="color:var(--text-secondary);">Arquitectura NCF:</strong><br/>
           • Embeddings 32D para usuario e ítem<br/>
-          • MLP: [64 → 32 → 16 → 1] + Sigmoid<br/>
+          • MLP: [64 → 128 → 64 → 32 → 1] + Sigmoid<br/>
           • Negative sampling 4:1<br/>
           • BCELoss + Adam (lr=0.001)<br/>
-          • 50 épocas de entrenamiento
+          • 40 épocas de entrenamiento real
         </p>
       </div>
     </div>
@@ -145,10 +145,10 @@
     <hr class="divider" />
     <div class="grid-2">
       <div style="font-size:0.85rem;">
-        <strong style="color:var(--text-secondary);">Dataset sintético:</strong> 500 usuarios, 50 destinos latinoamericanos, ~8,000 interacciones con sesgo de preferencia por perfil (playa, ciudad, aventura…)
+        <strong style="color:var(--text-secondary);">Dataset real de Kaggle:</strong> 999 reseñas reales de viajes, con 624 usuarios y 651 destinos valorados procedentes de <code>Final_Updated_Expanded_Reviews.csv</code>.
       </div>
       <div style="font-size:0.85rem;">
-        <strong style="color:var(--text-secondary);">Evaluación:</strong> Precision@K, Recall@K y NDCG@K calculados sobre el 20% de test. El modelo supera en <strong style="color:var(--accent-green);">+27%</strong> al baseline de popularidad en Precision@5.
+        <strong style="color:var(--text-secondary);">Evaluación:</strong> Métricas Precision@K, Recall@K y NDCG@K reales calculadas sobre el 20% de test. La altísima dispersión (99.8%) es típica de entornos reales sin sesgos artificiales.
       </div>
     </div>
   </div>
@@ -161,13 +161,15 @@
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 <script>
 function randomUser() {
-  document.getElementById('userIdInput').value = Math.floor(Math.random() * 500);
+  const validIds = [12, 20, 69, 109, 167, 327, 353, 386, 403, 408, 554, 626, 664, 735, 766, 783, 813, 910, 959, 999];
+  const idx = Math.floor(Math.random() * validIds.length);
+  document.getElementById('userIdInput').value = validIds[idx];
 }
 
 async function getRecommendations() {
   const userIdRaw = parseInt(document.getElementById('userIdInput').value);
-  if (isNaN(userIdRaw) || userIdRaw < 0 || userIdRaw > 499) {
-    showToast('El ID debe estar entre 0 y 499.', 'warning');
+  if (isNaN(userIdRaw) || userIdRaw < 2 || userIdRaw > 999) {
+    showToast('El ID debe estar entre 2 y 999.', 'warning');
     return;
   }
   const btn = document.getElementById('btnRecommend');
