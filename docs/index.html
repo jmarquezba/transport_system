@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informe Técnico Trabajo 3 — Sistemas Inteligentes de Movilidad y Turismo</title>
+    <title>Redes Neuronales Y Algoritmos Bioinspirados - Trabajo 3</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Informe Técnico detallado del Trabajo 3 para la asignatura de Redes Neuronales Aplicadas (IRNA). Universidad Nacional de Colombia.">
+    <meta name="description" content="Informe Técnico detallado del Trabajo 3 para la asignatura de Redes Neuronales y Algoritmos Bioinspirados. Universidad Nacional de Colombia.">
     <meta name="author" content="jmarquezba">
     <meta name="robots" content="index, follow">
     
@@ -21,11 +21,11 @@
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({ 
             startOnLoad: true, 
-            theme: 'dark',
+            theme: 'default',
             themeVariables: {
-                primaryColor: '#1e293b',
-                primaryTextColor: '#f8fafc',
-                lineColor: '#6366f1'
+                primaryColor: '#f1f5f9',
+                primaryTextColor: '#0f172a',
+                lineColor: '#1e3a8a'
             }
         });
     </script>
@@ -34,16 +34,16 @@
 
     <div class="app-container">
         
-        <!-- 🧭 Barra de Navegación Lateral (Sidebar) -->
+        <!-- 📚 Barra de Navegación Lateral (Sidebar Académico) -->
         <aside class="sidebar">
             <a href="#" class="sidebar-logo">
-                <div class="sidebar-logo-icon">NT</div>
-                <div class="sidebar-logo-text">NeuralTransit</div>
+                <div class="sidebar-logo-icon">RN</div>
+                <div class="sidebar-logo-text">Redes Neuronales</div>
             </a>
             
             <ul class="sidebar-menu">
                 <li class="sidebar-item active" id="nav-resumen">
-                    <a href="#resumen"><i class="fa-solid: fa-gauge-high"></i> Resumen Ejecutivo</a>
+                    <a href="#resumen"><i class="fa-solid fa-square-poll-horizontal"></i> Resumen Ejecutivo</a>
                 </li>
                 <li class="sidebar-item" id="nav-introduccion">
                     <a href="#introduccion"><i class="fa-solid fa-circle-info"></i> 1. Introducción</a>
@@ -80,15 +80,15 @@
             </div>
         </aside>
         
-        <!-- 📄 Área Principal de Contenido -->
+        <!-- 📄 Área Principal de Contenido (Hoja de Papel) -->
         <main class="main-content">
             <div class="container-narrow">
                 
                 <!-- 🏷️ Encabezado del Reporte -->
                 <header class="report-header">
-                    <h1>Sistemas de Inteligencia Artificial Aplicados al Turismo y la Seguridad Vial en Colombia</h1>
-                    <p style="font-size: 1.2rem; color: var(--text-secondary); margin-top: 0.5rem; text-align: left;">
-                        Informe Técnico — Trabajo 3 de Redes Neuronales Aplicadas (IRNA)
+                    <h1>Redes Neuronales Y Algoritmos Bioinspirados - Trabajo 3</h1>
+                    <p style="font-size: 1.15rem; color: var(--text-secondary); margin-top: 0.75rem; text-align: left; font-family: var(--font-heading); font-style: italic;">
+                        Sistemas de Inteligencia Artificial Aplicados al Turismo y la Seguridad Vial en Colombia
                     </p>
                     
                     <div class="report-meta">
@@ -192,14 +192,14 @@
                                 E -->|"Iteración si métricas < umbral"| B
                                 E -->|"Métricas ✓"| F["🚀 Entrega Final"]
                                 
-                                style A fill:#4ECDC4,color:#000,stroke:#333
-                                style B fill:#45B7D1,color:#000,stroke:#333
-                                style C fill:#96CEB4,color:#000,stroke:#333
-                                style D fill:#FFEAA7,color:#000,stroke:#333
-                                style E fill:#DDA0DD,color:#000,stroke:#333
-                                style F fill:#2ECC71,color:#fff,stroke:#333
+                                style A fill:#f1f5f9,color:#000,stroke:#1e3a8a
+                                style B fill:#eff6ff,color:#000,stroke:#1e3a8a
+                                style C fill:#f0fdf4,color:#000,stroke:#15803d
+                                style D fill:#fffbeb,color:#000,stroke:#b45309
+                                style E fill:#fdf4ff,color:#000,stroke:#a21caf
+                                style F fill:#15803d,color:#fff,stroke:#15803d
                         </div>
-                        <div class="image-caption">Flujo de trabajo de Design Thinking aplicado al proyecto</div>
+                        <div class="image-caption"><strong>Figura 1.</strong> <em>Flujo de trabajo de Design Thinking aplicado para estructurar el desarrollo del proyecto.</em></div>
                     </div>
                     
                     <h3>2.2 Hallazgos de la Fase de Empatía</h3>
@@ -314,13 +314,13 @@
                                 --> D["Split temporal\n(80% train / 20% test)"]
                                 --> E["DataLoader\n(batch_size=32)"]
                                 
-                                style A fill:#AED6F1,color:#000
-                                style B fill:#A9DFBF,color:#000
-                                style C fill:#F9E79F,color:#000
-                                style D fill:#F5CBA7,color:#000
-                                style E fill:#D2B4DE,color:#000
+                                style A fill:#eff6ff,color:#000,stroke:#1e3a8a
+                                style B fill:#f0fdf4,color:#000,stroke:#15803d
+                                style C fill:#fffbeb,color:#000,stroke:#b45309
+                                style D fill:#f5f5f5,color:#000,stroke:#737373
+                                style E fill:#faf5ff,color:#000,stroke:#a21caf
                         </div>
-                        <div class="image-caption">Pipeline de preprocesamiento de series temporales</div>
+                        <div class="image-caption"><strong>Figura 2.</strong> <em>Pipeline de preprocesamiento y estructuración secuencial para series de tiempo.</em></div>
                     </div>
                     
                     <h3>3.3 Arquitectura LSTM</h3>
@@ -395,7 +395,7 @@ class LSTMRegressor(nn.Module):
                                     <td>8.0%</td>
                                     <td>✅ Excelente</td>
                                 </tr>
-                                <tr style="background: rgba(99, 102, 241, 0.1); font-weight: bold; color: #fff;">
+                                <tr style="font-weight: bold;">
                                     <td>PROMEDIO</td>
                                     <td>95.7</td>
                                     <td>71.0</td>
@@ -423,21 +423,21 @@ class LSTMRegressor(nn.Module):
                             <div class="image-showcase-container">
                                 <img src="images/image1.png" alt="Pronóstico de demanda en Jaipur City">
                             </div>
-                            <div class="image-caption">Gráfico 1: Predicción de Demanda Histórica vs. Pronóstico a 30 días para Jaipur City</div>
+                            <div class="image-caption"><strong>Figura 3.</strong> <em>Predicción de Demanda Histórica vs. Pronóstico a 30 días del modelo LSTM en Jaipur City.</em></div>
                         </div>
                         
                         <div class="gallery-slide" data-slide="goa">
                             <div class="image-showcase-container">
                                 <img src="images/image2.png" alt="Pronóstico de demanda en Goa Beaches">
                             </div>
-                            <div class="image-caption">Gráfico 2: Predicción de Demanda Histórica vs. Pronóstico a 30 días para Goa Beaches</div>
+                            <div class="image-caption"><strong>Figura 4.</strong> <em>Predicción de Demanda Histórica vs. Pronóstico a 30 días del modelo LSTM en Goa Beaches.</em></div>
                         </div>
                         
                         <div class="gallery-slide" data-slide="leh">
                             <div class="image-showcase-container">
                                 <img src="images/image3.png" alt="Pronóstico de demanda en Leh Ladakh">
                             </div>
-                            <div class="image-caption">Gráfico 3: Predicción de Demanda Histórica vs. Pronóstico a 30 días para Leh Ladakh</div>
+                            <div class="image-caption"><strong>Figura 5.</strong> <em>Predicción de Demanda Histórica vs. Pronóstico a 30 días del modelo LSTM en Leh Ladakh.</em></div>
                         </div>
                     </div>
                 </section>
@@ -453,7 +453,7 @@ class LSTMRegressor(nn.Module):
                     
                     <h3>4.2 Dataset y Preprocesamiento</h3>
                     <p>
-                        El dataset consta de 2,000 imágenes estáticas estratificadas (200 por clase) correspondientes a 10 clases basadas en el dataset público <em>State Farm Distracted Driver Detection</em>:
+                        El dataset consta de 2,000 imágenes estáticas de prueba (200 por clase) correspondientes a 10 clases basadas en el dataset público <em>State Farm Distracted Driver Detection</em>:
                     </p>
                     <div class="table-container">
                         <table>
@@ -492,12 +492,12 @@ class LSTMRegressor(nn.Module):
                                 C --> D["Cabeza Clasificadora\n(FC 512 → 256 → 10)\nDropout 0.3 🔥"]
                                 D --> E["Output\n(Softmax Probabilidades)"]
                                 
-                                style B fill:#BDC3C7,color:#000
-                                style C fill:#F9E79F,color:#000
-                                style D fill:#A9DFBF,color:#000
-                                style E fill:#2ECC71,color:#fff
+                                style B fill:#f1f5f9,color:#000,stroke:#cbd5e1
+                                style C fill:#eff6ff,color:#000,stroke:#1e3a8a
+                                style D fill:#f0fdf4,color:#000,stroke:#15803d
+                                style E fill:#15803d,color:#fff,stroke:#15803d
                         </div>
-                        <div class="image-caption">Estrategia de Transfer Learning sobre ResNet18</div>
+                        <div class="image-caption"><strong>Figura 6.</strong> <em>Estrategia de Transfer Learning y Fine-Tuning selectivo aplicada sobre ResNet18.</em></div>
                     </div>
                     
                     <h3>4.4 Resultados del Módulo 2</h3>
@@ -509,7 +509,7 @@ class LSTMRegressor(nn.Module):
                         <div class="image-showcase-container">
                             <img src="images/image4.png" alt="Matriz de Confusión de Clasificación de Conductores">
                         </div>
-                        <div class="image-caption">Gráfico 4: Matriz de Confusión del Clasificador ResNet18 (Valores Absolutos en Test Set)</div>
+                        <div class="image-caption"><strong>Figura 7.</strong> <em>Matriz de confusión del clasificador convolucional ResNet18 sobre el conjunto de prueba.</em></div>
                     </div>
                     
                     <p>
@@ -555,12 +555,12 @@ class LSTMRegressor(nn.Module):
                                 L3 --> O["Linear 16 → 1\n+ Sigmoid"]
                                 O --> P["Probabilidad de Interacción\n(Rating Estimado)"]
                                 
-                                style UE fill:#85C1E9,color:#000
-                                style IE fill:#85C1E9,color:#000
-                                style C fill:#F9E79F,color:#000
-                                style O fill:#2ECC71,color:#fff
+                                style UE fill:#eff6ff,color:#000,stroke:#1e3a8a
+                                style IE fill:#eff6ff,color:#000,stroke:#1e3a8a
+                                style C fill:#fffbeb,color:#000,stroke:#b45309
+                                style O fill:#15803d,color:#fff,stroke:#15803d
                         </div>
-                        <div class="image-caption">Arquitectura detallada del recomendador NCF</div>
+                        <div class="image-caption"><strong>Figura 8.</strong> <em>Flujo de tensores en la arquitectura profunda del recomendador NCF.</em></div>
                     </div>
                     
                     <h3>5.4 Negative Sampling y Evaluación Cuantitativa</h3>
@@ -603,7 +603,7 @@ class LSTMRegressor(nn.Module):
                         <div class="image-showcase-container">
                             <img src="images/image5.png" alt="Interfaz de recomendaciones NCF">
                         </div>
-                        <div class="image-caption">Gráfico 5: Interfaz del Módulo de Recomendaciones de Viajes NCF e Indicadores Cuantitativos en el Portal Web</div>
+                        <div class="image-caption"><strong>Figura 9.</strong> <em>Panel web de recomendaciones de viaje personalizadas NCF y métricas de desempeño del modelo.</em></div>
                     </div>
                     
                     <p>
@@ -629,11 +629,11 @@ class LSTMRegressor(nn.Module):
                                 R --> M3["Módulo 3\nNCF Recommendations"]
                                 M1 & M2 & M3 <--> P["💾 Parámetros Serializados (.pt / .pkl)"]
                                 
-                                style UI fill:#E8F4F8,stroke:#2E86AB,color:#000
-                                style R fill:#F0FFF4,stroke:#27AE60,color:#000
-                                style P fill:#FFF9E6,stroke:#F39C12,color:#000
+                                style UI fill:#eff6ff,stroke:#1e3a8a,color:#000
+                                style R fill:#f0fdf4,stroke:#15803d,color:#000
+                                style P fill:#fffbeb,stroke:#b45309,color:#000
                         </div>
-                        <div class="image-caption">Arquitectura cliente-servidor de la plataforma web</div>
+                        <div class="image-caption"><strong>Figura 10.</strong> <em>Arquitectura de microservicios e integración MVC en el servidor de inferencia.</em></div>
                     </div>
                     
                     <h3>6.2 Guía de Uso del Portal Web</h3>
@@ -645,11 +645,11 @@ class LSTMRegressor(nn.Module):
                         <div class="image-showcase-container">
                             <img src="images/image6.png" alt="Pantalla de Inicio de la Web App">
                         </div>
-                        <div class="image-caption">Gráfico 6: Panel de Inicio General e Interfaz Principal de Módulos (NeuralTransit Lab)</div>
+                        <div class="image-caption"><strong>Figura 11.</strong> <em>Pantalla principal del portal web interactivo de microservicios Flask.</em></div>
                     </div>
                     
                     <ul>
-                        <li><p><strong>Módulo 1:</strong> Permite seleccionar un destino y un horizonte de tiempo (1-30 días) para renderizar dinámicamente un gráfico SVG interactivo con las demandas históricas y el pronóstico de pasajeros.</p></li>
+                        <li><p><strong>Módulo 1:</strong> Permite seleccionar un destino y un horizonte de tiempo (1-30 días) para renderizar dinámicamente un gráfico interactivo con las demandas históricas y el pronóstico de pasajeros.</p></li>
                         <li><p><strong>Módulo 2:</strong> Permite cargar una foto desde el navegador y muestra de forma inmediata la clasificación del conductor, su porcentaje de confianza y el nivel de riesgo en la pantalla.</p></li>
                         <li><p><strong>Módulo 3:</strong> Permite ingresar un ID de usuario del conjunto de pruebas y despliega la lista del top-5 de destinos turísticos personalizados con su respectiva calificación predictiva.</p></li>
                     </ul>
@@ -684,17 +684,17 @@ class LSTMRegressor(nn.Module):
                     
                     <div class="card-grid">
                         <div class="premium-card">
-                            <div class="card-icon"><i class="fa-solid: fa-road"></i></div>
+                            <div class="card-icon"><i class="fa-solid fa-road"></i></div>
                             <h4>Predicción Estable</h4>
                             <p>El Módulo 1 validó que una LSTM de dos capas puede predecir con alta precisión (MAPE 8.1%) ciclos estacionales de transporte, ofreciendo planes de acción preventivos para transportadores.</p>
                         </div>
                         <div class="premium-card">
-                            <div class="card-icon"><i class="fa-solid: fa-camera"></i></div>
+                            <div class="card-icon"><i class="fa-solid fa-camera"></i></div>
                             <h4>Visión Adaptada</h4>
                             <p>ResNet18 demostró el enorme potencial del Transfer Learning, permitiendo con solo 2,000 imágenes ajustadas un excelente clasificador de conductas de cabina con un F1-macro de 0.843.</p>
                         </div>
                         <div class="premium-card">
-                            <div class="card-icon"><i class="fa-solid: fa-database"></i></div>
+                            <div class="card-icon"><i class="fa-solid fa-database"></i></div>
                             <h4>Límite de Dispersión</h4>
                             <p>El recomendador colaborativo NCF demostró de manera empírica que el filtrado puro sufre severamente en escenarios de datos reales altamente dispersos (0.24%), invitando a diseñar sistemas híbridos.</p>
                         </div>
@@ -711,7 +711,7 @@ class LSTMRegressor(nn.Module):
                 <!-- 📋 SECCIÓN: Referencias -->
                 <section id="referencias" class="report-section">
                     <h2>Referencias</h2>
-                    <ol style="margin-left: 1.5rem; color: var(--text-secondary); line-height: 1.8;">
+                    <ol style="line-height: 1.8;">
                         <li><p>Hochreiter, S., &amp; Schmidhuber, J. (1997). Long short-term memory. <em>Neural computation</em>, 9(8), 1735-1780. <a href="https://doi.org/10.1162/neco.1997.9.8.1735" target="_blank">https://doi.org/10.1162/neco.1997.9.8.1735</a></p></li>
                         <li><p>He, K., Zhang, X., Ren, S., &amp; Sun, J. (2016). Deep residual learning for image recognition. In <em>Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition</em> (pp. 770-778). <a href="https://arxiv.org/abs/1512.03385" target="_blank">https://arxiv.org/abs/1512.03385</a></p></li>
                         <li><p>He, X., Liao, L., Zhang, H., Nie, L., Hu, X., &amp; Chua, T. S. (2017). Neural collaborative filtering. In <em>Proceedings of the 26th International Conference on World Wide Web</em> (pp. 173-182). <a href="https://arxiv.org/abs/1708.05031" target="_blank">https://arxiv.org/abs/1708.05031</a></p></li>
