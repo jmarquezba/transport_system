@@ -65,7 +65,9 @@ config_local.py
 kaggle.json
 
 # Modelos pre-entrenados en webapp/models/ SÍ se commitean
-# (overrides de las reglas *.pt / *.pkl arriba)
+# (overrides de las reglas *.pt / *.pkl / *.onnx arriba)
 !webapp/models/*.pt
 !webapp/models/*.pkl
+!webapp/models/*.onnx
+!webapp/models/*.onnx.data
 scratch/

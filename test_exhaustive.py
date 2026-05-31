@@ -7,7 +7,6 @@ import os
 import pickle
 import numpy as np
 import pandas as pd
-import torch
 
 # Añadir el directorio raíz al path para importar la app de Flask
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
