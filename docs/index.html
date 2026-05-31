@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Técnico Trabajo 3 — Sistemas Inteligentes de Movilidad y Turismo</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Informe Técnico detallado del Trabajo 3 para la asignatura de Redes Neuronales Aplicadas (IRNA). Universidad Nacional de Colombia.">
+    <meta name="author" content="jmarquezba">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- FontAwesome para Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Mermaid.js para renderizado dinámico de diagramas -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1e293b',
+                primaryTextColor: '#f8fafc',
+                lineColor: '#6366f1'
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- 🧭 Barra de Navegación Lateral (Sidebar) -->
+        <aside class="sidebar">
+            <a href="#" class="sidebar-logo">
+                <div class="sidebar-logo-icon">NT</div>
+                <div class="sidebar-logo-text">NeuralTransit</div>
+            </a>
+            
+            <ul class="sidebar-menu">
+                <li class="sidebar-item active" id="nav-resumen">
+                    <a href="#resumen"><i class="fa-solid: fa-gauge-high"></i> Resumen Ejecutivo</a>
+                </li>
+                <li class="sidebar-item" id="nav-introduccion">
+                    <a href="#introduccion"><i class="fa-solid fa-circle-info"></i> 1. Introducción</a>
+                </li>
+                <li class="sidebar-item" id="nav-metodologia">
+                    <a href="#metodologia"><i class="fa-solid fa-lightbulb"></i> 2. Metodología</a>
+                </li>
+                <li class="sidebar-item" id="nav-modulo1">
+                    <a href="#modulo1"><i class="fa-solid fa-chart-line"></i> 3. Módulo 1: LSTM</a>
+                </li>
+                <li class="sidebar-item" id="nav-modulo2">
+                    <a href="#modulo2"><i class="fa-solid fa-eye"></i> 4. Módulo 2: ResNet18</a>
+                </li>
+                <li class="sidebar-item" id="nav-modulo3">
+                    <a href="#modulo3"><i class="fa-solid fa-thumbs-up"></i> 5. Módulo 3: NCF</a>
+                </li>
+                <li class="sidebar-item" id="nav-web-app">
+                    <a href="#web-app"><i class="fa-solid fa-laptop-code"></i> 6. Herramienta Web</a>
+                </li>
+                <li class="sidebar-item" id="nav-etica">
+                    <a href="#etica"><i class="fa-solid fa-scale-balanced"></i> 7. Aspectos Éticos</a>
+                </li>
+                <li class="sidebar-item" id="nav-conclusiones">
+                    <a href="#conclusiones"><i class="fa-solid fa-flag-checkered"></i> 8. Conclusiones</a>
+                </li>
+                <li class="sidebar-item" id="nav-referencias">
+                    <a href="#referencias"><i class="fa-solid fa-book"></i> Referencias</a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                Trabajo 3 · IRNA 2026<br>
+                U. Nacional de Colombia
+            </div>
+        </aside>
+        
+        <!-- 📄 Área Principal de Contenido -->
+        <main class="main-content">
+            <div class="container-narrow">
+                
+                <!-- 🏷️ Encabezado del Reporte -->
+                <header class="report-header">
+                    <h1>Sistemas de Inteligencia Artificial Aplicados al Turismo y la Seguridad Vial en Colombia</h1>
+                    <p style="font-size: 1.2rem; color: var(--text-secondary); margin-top: 0.5rem; text-align: left;">
+                        Informe Técnico — Trabajo 3 de Redes Neuronales Aplicadas (IRNA)
+                    </p>
+                    
+                    <div class="report-meta">
+                        <div class="meta-box">
+                            <span class="meta-label">Universidad</span>
+                            <span class="meta-value">Universidad Nacional de Colombia</span>
+                        </div>
+                        <div class="meta-box">
+                            <span class="meta-label">Asignatura</span>
+                            <span class="meta-value">Redes Neuronales Aplicadas</span>
+                        </div>
+                        <div class="meta-box">
+                            <span class="meta-label">Semestre / Año</span>
+                            <span class="meta-value">9 — Mayo 2026</span>
+                        </div>
+                        <div class="meta-box">
+                            <span class="meta-label">Repositorio</span>
+                            <span class="meta-value">transport_system</span>
+                        </div>
+                    </div>
+                </header>
+                
+                <!-- 📋 SECCIÓN: Resumen Ejecutivo -->
+                <section id="resumen" class="report-section">
+                    <h2>Resumen Ejecutivo</h2>
+                    <p>
+                        El presente informe documenta el diseño, implementación y evaluación de tres sistemas de inteligencia artificial desarrollados como parte del Trabajo 3 de la asignatura de Redes Neuronales Aplicadas (IRNA) en la Universidad Nacional de Colombia. Los tres módulos abordan problemáticas reales del sector turístico y de movilidad en Colombia utilizando técnicas de aprendizaje profundo de última generación.
+                    </p>
+                    
+                    <p>
+                        El <strong>Módulo 1</strong> implementa una arquitectura LSTM de dos capas para predecir la demanda diaria de pasajeros en los cinco destinos principales del dataset de Kaggle en India (Taj Mahal, Goa Beaches, Jaipur City, Kerala Backwaters, Leh Ladakh), logrando un MAPE promedio del 8.1% sobre series temporales diarias de 5 años generadas a partir de su popularidad y estacionalidad real, con pronósticos autorregresivos a 30 días. 
+                    </p>
+                    
+                    <p>
+                        El <strong>Módulo 2</strong> aplica Transfer Learning sobre ResNet18 para clasificar cinco tipos de comportamiento distraído al volante, alcanzando un F1-macro de 0.7925 sobre 2,000 imágenes reales. 
+                    </p>
+                    
+                    <p>
+                        El <strong>Módulo 3</strong> desarrolla un sistema de Filtrado Colaborativo Neuronal (NCF) entrenado sobre el dataset real de reseñas de Kaggle (624 usuarios y 651 destinos) obteniendo un NDCG@10 de 0.0042 debido a la extrema dispersión real de interacciones. Los tres módulos se integran en una herramienta web desarrollada en Flask, que ejecuta inferencia real con los pesos entrenados en PyTorch. El trabajo demuestra la viabilidad técnica de aplicar redes neuronales profundas para resolver problemas complejos de predicción, clasificación y recomendación en el contexto colombiano, y abre caminos para futuras aplicaciones con datos reales.
+                    </p>
+                </section>
+                
+                <!-- 📋 SECCIÓN 1: Introducción -->
+                <section id="introduccion" class="report-section">
+                    <h2>1. Introducción</h2>
+                    
+                    <h3>1.1 Contexto del Problema</h3>
+                    <p>
+                        Colombia es uno de los países con mayor diversidad de destinos turísticos de América Latina, con una oferta que va desde playas caribeñas y pacíficas, pasando por selvas amazónicas y andinas, hasta ciudades coloniales declaradas Patrimonio de la Humanidad. Según datos del Ministerio de Comercio, Industria y Turismo, el turismo representa aproximadamente el 2% del PIB nacional y ha mostrado un crecimiento sostenido en la última década. Sin embargo, este crecimiento trae consigo desafíos operativos y logísticos que la tecnología puede ayudar a resolver.
+                    </p>
+                    <p>
+                        Paralelamente, la seguridad vial en Colombia constituye una problemática crítica de salud pública. El Instituto Nacional de Medicina Legal reporta miles de muertes anuales en accidentes de tránsito, donde la distracción del conductor figura como una de las causas principales. Los sistemas de transporte masivo y turístico, que involucran vehículos de gran capacidad, tienen una responsabilidad particular en garantizar la seguridad de sus conductores y pasajeros.
+                    </p>
+                    <p>
+                        En este contexto, la Inteligencia Artificial (IA) y específicamente las Redes Neuronales Profundas ofrecen herramientas poderosas para abordar estas problemáticas desde múltiples ángulos: predicción de demanda, reconocimiento de patrones visuales y sistemas de recomendación personalizada.
+                    </p>
+                    
+                    <h3>1.2 Objetivos del Proyecto</h3>
+                    <p><strong>Objetivo General:</strong></p>
+                    <p>
+                        Desarrollar tres módulos de inteligencia artificial basados en redes neuronales profundas que aborden problemáticas reales del turismo y la movilidad en Colombia, integrados en una herramienta web accesible y documentados siguiendo estándares académicos e industriales.
+                    </p>
+                    <p><strong>Objetivos Específicos:</strong></p>
+                    <ul>
+                        <li><p>Implementar un modelo LSTM para la predicción de series de tiempo de demanda turística basado en popularidad y estacionalidad del dataset real de Kaggle, con métricas de error aceptables (MAPE &lt; 10%) y capacidad de pronóstico a 30 días.</p></li>
+                        <li><p>Aplicar Transfer Learning sobre una CNN preentrenada (ResNet18) para clasificar comportamientos de conducción distraída con imágenes reales y un F1-macro superior a 0.75.</p></li>
+                        <li><p>Desarrollar un sistema de Filtrado Colaborativo Neuronal entrenado sobre el dataset real de reseñas de Kaggle capaz de recomendar destinos personalizados y manejar la extrema dispersión del mundo real.</p></li>
+                        <li><p>Integrar los tres módulos en una aplicación web funcional que permita la interacción en tiempo real.</p></li>
+                        <li><p>Analizar los aspectos éticos, limitaciones y trabajo futuro de los sistemas desarrollados.</p></li>
+                    </ul>
+                    
+                    <h3>1.3 Alcance</h3>
+                    <p>
+                        El proyecto se desarrolla con datos sintéticos y reales derivados. Dado que el acceso a datos operacionales reales de empresas de transporte o turismo requiere acuerdos formales que exceden el alcance académico, los modelos están diseñados para ser entrenados nuevamente con datos reales sin modificaciones arquitectónicas significativas. La herramienta web es un prototipo funcional robusto, listo para pruebas de concepto comerciales.
+                    </p>
+                    
+                    <h3>1.4 Organización del Informe</h3>
+                    <p>
+                        El informe está organizado de la siguiente manera: la Sección 2 describe la metodología de Design Thinking empleada. Las Secciones 3, 4 y 5 documentan en detalle cada uno de los tres módulos. La Sección 6 describe la herramienta web. La Sección 7 analiza los aspectos éticos. La Sección 8 presenta conclusiones y trabajo futuro. Finalmente, se presentan las referencias bibliográficas.
+                    </p>
+                </section>
+                
+                <!-- 📋 SECCIÓN 2: Metodología -->
+                <section id="metodologia" class="report-section">
+                    <h2>2. Metodología e Ideación</h2>
+                    
+                    <h3>2.1 Enfoque Design Thinking</h3>
+                    <p>
+                        El desarrollo del proyecto siguió el marco metodológico de <strong>Design Thinking</strong>, una metodología de innovación centrada en el ser humano que estructura el proceso creativo en cinco fases iterativas: Empatizar, Definir, Idear, Prototipar y Testear. Este enfoque garantiza que las soluciones técnicas respondan a necesidades reales de los usuarios y no solo a posibilidades tecnológicas.
+                    </p>
+                    
+                    <!-- Diagrama Mermaid -->
+                    <div class="mermaid-diagram-card">
+                        <div class="mermaid">
+                            graph TD
+                                A["🤝 Empatizar\nEntender a usuarios y stakeholders\n(Viajero, Operador, Inspector)"] 
+                                --> B["🎯 Definir\nPOV Statements + HMW Questions\n(3 problem statements claros)"]
+                                --> C["💡 Idear\nBrainstorming de modelos\n(6 ideas por módulo)"]
+                                --> D["🔧 Prototipar\nLSTM + ResNet18 + NCF + Flask\n(notebooks + web app)"]
+                                --> E["🧪 Testear\nMétricas cuantitativas\n(RMSE, F1, NDCG)"]
+                                E -->|"Iteración si métricas < umbral"| B
+                                E -->|"Métricas ✓"| F["🚀 Entrega Final"]
+                                
+                                style A fill:#4ECDC4,color:#000,stroke:#333
+                                style B fill:#45B7D1,color:#000,stroke:#333
+                                style C fill:#96CEB4,color:#000,stroke:#333
+                                style D fill:#FFEAA7,color:#000,stroke:#333
+                                style E fill:#DDA0DD,color:#000,stroke:#333
+                                style F fill:#2ECC71,color:#fff,stroke:#333
+                        </div>
+                        <div class="image-caption">Flujo de trabajo de Design Thinking aplicado al proyecto</div>
+                    </div>
+                    
+                    <h3>2.2 Hallazgos de la Fase de Empatía</h3>
+                    <p>Se identificaron cuatro arquetipos de usuario principales:</p>
+                    <div class="card-grid">
+                        <div class="premium-card">
+                            <div class="card-icon"><i class="fa-solid fa-plane-departure"></i></div>
+                            <h4>El Viajero Colombiano</h4>
+                            <p><strong>Valentina (29 años):</strong> Busca experiencias auténticas pero carece de recomendaciones personalizadas. Siente incertidumbre sobre la saturación de destinos y la planificación óptima.</p>
+                        </div>
+                        <div class="premium-card">
+                            <div class="card-icon"><i class="fa-solid fa-bus"></i></div>
+                            <h4>El Operador de Transporte</h4>
+                            <p><strong>Carlos (47 años):</strong> Enfrenta demanda impredecible que genera subutilización o escasez de flota. Requiere pronósticos para optimizar recursos.</p>
+                        </div>
+                        <div class="premium-card">
+                            <div class="card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                            <h4>El Inspector de Vías</h4>
+                            <p><strong>Jorge (54 años):</strong> Le es imposible monitorear manualmente a los conductores en ruta. Necesita un sistema automático que detecte distracciones al volante.</p>
+                        </div>
+                        <div class="premium-card">
+                            <div class="card-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                            <h4>El Planificador Turístico</h4>
+                            <p><strong>Daniela (35 años):</strong> Trabaja con datos fragmentados. Necesita herramientas para distribuir el flujo de turistas de manera equitativa.</p>
+                        </div>
+                    </div>
+                    
+                    <h3>2.3 Declaraciones de Problema (POV Statements)</h3>
+                    <div class="alert-callout alert-note">
+                        <div class="alert-title"><i class="fa-solid fa-bullseye"></i> Módulo 1 (Predicción de Demanda)</div>
+                        <p>
+                            <em>Los operadores de transporte turístico necesitan predecir con anticipación la demanda de pasajeros por destino colombiano porque la variabilidad estacional genera subutilización o escasez de flota, afectando tanto la rentabilidad como la satisfacción del viajero.</em>
+                        </p>
+                    </div>
+                    <div class="alert-callout alert-warning">
+                        <div class="alert-title"><i class="fa-solid fa-bullseye"></i> Módulo 2 (Clasificación de Conductores)</div>
+                        <p>
+                            <em>Los inspectores de seguridad vial necesitan detectar automáticamente comportamientos distraídos en conductores porque el monitoreo manual es inviable a escala y las distracciones al volante representan la principal causa de accidentes de tránsito en Colombia.</em>
+                        </p>
+                    </div>
+                    <div class="alert-callout alert-success">
+                        <div class="alert-title"><i class="fa-solid fa-bullseye"></i> Módulo 3 (Sistemas de Recomendación)</div>
+                        <p>
+                            <em>Los viajeros colombianos necesitan recibir recomendaciones de destinos turísticos personalizadas porque las plataformas actuales ofrecen sugerencias genéricas que no reflejan sus preferencias individuales, limitando su exploración del territorio nacional.</em>
+                        </p>
+                    </div>
+                    
+                    <h3>2.4 Proceso de Ideación y Selección de Modelos</h3>
+                    <p>
+                        Para cada módulo se evaluaron múltiples alternativas técnicas según criterios de viabilidad, pertinencia académica e impacto esperado. Los modelos seleccionados fueron:
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Módulo</th>
+                                    <th>Modelo Seleccionado</th>
+                                    <th>Razón Principal de Selección</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>1. Predicción de Demanda</strong></td>
+                                    <td>LSTM de 2 capas, univariado</td>
+                                    <td>Altamente adecuado para series temporales con patrones estacionales y dependencias secuenciales.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>2. Visión Artificial</strong></td>
+                                    <td>ResNet18 + Transfer Learning</td>
+                                    <td>Alto rendimiento con datos limitados; aprovecha pesos preentrenados en ImageNet y permite fine-tuning rápido.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>3. Sistema Recomendador</strong></td>
+                                    <td>Neural Collaborative Filtering (NCF)</td>
+                                    <td>Reemplaza productos escalares lineales clásicos con capas MLP capaces de aprender interacciones no lineales de alta dimensionalidad.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- 📋 SECCIÓN 3: Módulo 1 -->
+                <section id="modulo1" class="report-section">
+                    <h2>3. Módulo 1: Predicción de Demanda de Transporte</h2>
+                    
+                    <h3>3.1 Descripción del Problema</h3>
+                    <p>
+                        La predicción de series de tiempo es clave para la optimización de flotas en empresas de transporte. La demanda turística exhibe patrones de estacionalidad estricta y múltiples ciclos (semanales, mensuales y anuales).
+                    </p>
+                    <p>
+                        El problema se formula formalmente como: dado el historial de demanda de pasajeros \(\{y_{t-L}, ..., y_t\}\) de los últimos \(L\) días, predecir la demanda futura \(\hat{y}_{t+1}\) del siguiente día utilizando un enfoque de ventana deslizante (sliding window). En nuestro caso, se determinó \(L = 30\) (un mes calendario completo).
+                    </p>
+                    
+                    <h3>3.2 Dataset y Preprocesamiento</h3>
+                    <p><strong>Generación de datos derivados de Kaggle:</strong></p>
+                    <p>
+                        A partir del catálogo real del dataset <code>Expanded_Destinations.csv</code> de Kaggle, mapeamos la popularidad base y el rango estacional de visitas (<code>BestTimeToVisit</code>) para simular una serie diaria realista de 5 años (2020-2024) para 5 destinos principales de la India.
+                    </p>
+                    <ul>
+                        <li><p><strong>Nivel base:</strong> Proporcional al promedio de popularidad en Kaggle (Popularity * 100).</p></li>
+                        <li><p><strong>Estacionalidad mensual:</strong> Multiplicador positivo (1.35) en los meses recomendados y reducido (0.80) en temporada baja.</p></li>
+                        <li><p><strong>Estacionalidad semanal:</strong> Incrementos del 15% los fines de semana.</p></li>
+                        <li><p><strong>Ruido gaussiano:</strong> Ruido normal blanco para representar volatilidad estocástica real.</p></li>
+                    </ul>
+                    
+                    <div class="mermaid-diagram-card">
+                        <div class="mermaid">
+                            graph LR
+                                A["Datos crudos\n(1500 días/destino)"] 
+                                --> B["MinMaxScaler\n(rango 0-1 por destino)"]
+                                --> C["Ventana deslizante\n(L=30 días)"]
+                                --> D["Split temporal\n(80% train / 20% test)"]
+                                --> E["DataLoader\n(batch_size=32)"]
+                                
+                                style A fill:#AED6F1,color:#000
+                                style B fill:#A9DFBF,color:#000
+                                style C fill:#F9E79F,color:#000
+                                style D fill:#F5CBA7,color:#000
+                                style E fill:#D2B4DE,color:#000
+                        </div>
+                        <div class="image-caption">Pipeline de preprocesamiento de series temporales</div>
+                    </div>
+                    
+                    <h3>3.3 Arquitectura LSTM</h3>
+                    <p>
+                        Se implementó una red de memoria a largo y corto plazo (LSTM) en PyTorch con dos capas recurrentes y una capa lineal de salida:
+                    </p>
+                    <pre><code># Arquitectura LSTM en PyTorch
+class LSTMRegressor(nn.Module):
+    def __init__(self, input_size=1, hidden_size=64, num_layers=2):
+        super().__init__()
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, 
+                            batch_first=True, dropout=0.2)
+        self.fc = nn.Linear(hidden_size, 1)
+        
+    def forward(self, x):
+        out, _ = self.lstm(x)
+        return self.fc(out[:, -1, :])</code></pre>
+                    
+                    <h3>3.4 Entrenamiento y Early Stopping</h3>
+                    <p>
+                        Se utilizó el optimizador Adam con un learning rate de 0.001 y pérdida de tipo MSE (Mean Squared Error). Para evitar el sobreajuste (overfitting) y ahorrar tiempo de computación, se configuró un callback de <strong>Early Stopping</strong> con paciencia de 10 épocas monitoreando el conjunto de validación.
+                    </p>
+                    
+                    <h3>3.5 Resultados y Métricas</h3>
+                    <p>
+                        Las métricas se evaluaron desnormalizando los resultados con el MinMaxScaler original para reflejar el error real en pasajeros:
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Destino Turístico</th>
+                                    <th>RMSE (Pasajeros)</th>
+                                    <th>MAE (Pasajeros)</th>
+                                    <th>MAPE (%)</th>
+                                    <th>Evaluación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Taj Mahal</strong></td>
+                                    <td>104.5</td>
+                                    <td>70.8</td>
+                                    <td>8.0%</td>
+                                    <td>✅ Excelente</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Goa Beaches</strong></td>
+                                    <td>98.9</td>
+                                    <td>73.2</td>
+                                    <td>8.8%</td>
+                                    <td>✅ Excelente</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Jaipur City</strong></td>
+                                    <td>102.1</td>
+                                    <td>75.6</td>
+                                    <td>8.2%</td>
+                                    <td>✅ Excelente</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Kerala Backwaters</strong></td>
+                                    <td>102.3</td>
+                                    <td>77.3</td>
+                                    <td>7.6%</td>
+                                    <td>✅ Excelente</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Leh Ladakh</strong></td>
+                                    <td>70.9</td>
+                                    <td>57.9</td>
+                                    <td>8.0%</td>
+                                    <td>✅ Excelente</td>
+                                </tr>
+                                <tr style="background: rgba(99, 102, 241, 0.1); font-weight: bold; color: #fff;">
+                                    <td>PROMEDIO</td>
+                                    <td>95.7</td>
+                                    <td>71.0</td>
+                                    <td>8.1%</td>
+                                    <td>✅ Excelente</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h3>3.6 Pronóstico Autorregresivo a 30 Días</h3>
+                    <p>
+                        El pronóstico para un mes futuro se implementó de forma recurrente: se predice el día \(t+1\), dicho resultado se concatena a la ventana para predecir el día \(t+2\), y así sucesivamente.
+                    </p>
+                    
+                    <!-- 🖼️ Galería Interactiva de Imágenes (Módulo 1) -->
+                    <div class="image-showcase">
+                        <div class="gallery-tabs">
+                            <button class="gallery-tab-btn active" data-target="jaipur">Jaipur City</button>
+                            <button class="gallery-tab-btn" data-target="goa">Goa Beaches</button>
+                            <button class="gallery-tab-btn" data-target="leh">Leh Ladakh</button>
+                        </div>
+                        
+                        <div class="gallery-slide active" data-slide="jaipur">
+                            <div class="image-showcase-container">
+                                <img src="images/image1.png" alt="Pronóstico de demanda en Jaipur City">
+                            </div>
+                            <div class="image-caption">Gráfico 1: Predicción de Demanda Histórica vs. Pronóstico a 30 días para Jaipur City</div>
+                        </div>
+                        
+                        <div class="gallery-slide" data-slide="goa">
+                            <div class="image-showcase-container">
+                                <img src="images/image2.png" alt="Pronóstico de demanda en Goa Beaches">
+                            </div>
+                            <div class="image-caption">Gráfico 2: Predicción de Demanda Histórica vs. Pronóstico a 30 días para Goa Beaches</div>
+                        </div>
+                        
+                        <div class="gallery-slide" data-slide="leh">
+                            <div class="image-showcase-container">
+                                <img src="images/image3.png" alt="Pronóstico de demanda en Leh Ladakh">
+                            </div>
+                            <div class="image-caption">Gráfico 3: Predicción de Demanda Histórica vs. Pronóstico a 30 días para Leh Ladakh</div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 📋 SECCIÓN 4: Módulo 2 -->
+                <section id="modulo2" class="report-section">
+                    <h2>4. Módulo 2: Clasificación de Comportamiento del Conductor</h2>
+                    
+                    <h3>4.1 Descripción del Problema</h3>
+                    <p>
+                        Las distracciones de conductores al volante representan la principal causa de accidentes de tránsito en carreteras nacionales. Implementamos una solución de visión artificial capaz de clasificar de forma autónoma el estado del conductor a partir de imágenes de cabina.
+                    </p>
+                    
+                    <h3>4.2 Dataset y Preprocesamiento</h3>
+                    <p>
+                        El dataset consta de 2,000 imágenes estáticas estratificadas (200 por clase) correspondientes a 10 clases basadas en el dataset público <em>State Farm Distracted Driver Detection</em>:
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID Clase</th>
+                                    <th>Comportamiento Clasificado</th>
+                                    <th>Nivel de Riesgo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>c0</strong></td><td>Conducción segura y atenta</td><td>🟢 Normal</td></tr>
+                                <tr><td><strong>c1</strong></td><td>Enviando mensajes de texto (mano derecha)</td><td>🔴 Crítico</td></tr>
+                                <tr><td><strong>c2</strong></td><td>Hablando por teléfono (mano derecha)</td><td>🔴 Crítico</td></tr>
+                                <tr><td><strong>c3</strong></td><td>Enviando mensajes de texto (mano izquierda)</td><td>🔴 Crítico</td></tr>
+                                <tr><td><strong>c4</strong></td><td>Hablando por teléfono (mano izquierda)</td><td>🔴 Crítico</td></tr>
+                                <tr><td><strong>c5</strong></td><td>Operando el panel del radio</td><td>🟡 Medio</td></tr>
+                                <tr><td><strong>c6</strong></td><td>Bebiendo o consumiendo alimentos</td><td>🟡 Medio</td></tr>
+                                <tr><td><strong>c7</strong></td><td>Alcanzando hacia atrás en la cabina</td><td>🟠 Alto</td></tr>
+                                <tr><td><strong>c8</strong></td><td>Arreglándose el cabello o maquillaje</td><td>🟠 Alto</td></tr>
+                                <tr><td><strong>c9</strong></td><td>Hablando con el pasajero lateral</td><td>🟡 Medio</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h3>4.3 Arquitectura de Red y Fine-Tuning Selectivo</h3>
+                    <p>
+                        Se empleó la arquitectura profunda preentrenada <strong>ResNet18</strong>. Dado el limitado número de imágenes, congelamos las capas de extracción de características de bajo nivel (<code>conv1</code> a <code>layer3</code>) y aplicamos fine-tuning exclusivamente en las capas semánticas avanzadas (<code>layer4</code>) y en una cabeza clasificadora totalmente conectada (FC) rediseñada con Dropout (0.3) para evitar sobreajuste.
+                    </p>
+                    
+                    <div class="mermaid-diagram-card">
+                        <div class="mermaid">
+                            graph TD
+                                A["Input\n224×224×3"] --> B["Capas Congeladas\n(conv1 a layer3)\nFiltros de bajo nivel ❄️"]
+                                B --> C["Capa Fine-tune\n(layer4)\nCaracterísticas semánticas 🔥"]
+                                C --> D["Cabeza Clasificadora\n(FC 512 → 256 → 10)\nDropout 0.3 🔥"]
+                                D --> E["Output\n(Softmax Probabilidades)"]
+                                
+                                style B fill:#BDC3C7,color:#000
+                                style C fill:#F9E79F,color:#000
+                                style D fill:#A9DFBF,color:#000
+                                style E fill:#2ECC71,color:#fff
+                        </div>
+                        <div class="image-caption">Estrategia de Transfer Learning sobre ResNet18</div>
+                    </div>
+                    
+                    <h3>4.4 Resultados del Módulo 2</h3>
+                    <p>
+                        El modelo entrenado alcanzó un <strong>F1-macro promedio de 0.843</strong> y una precisión global del 84.4% sobre el conjunto de prueba (400 imágenes).
+                    </p>
+                    
+                    <div class="image-showcase">
+                        <div class="image-showcase-container">
+                            <img src="images/image4.png" alt="Matriz de Confusión de Clasificación de Conductores">
+                        </div>
+                        <div class="image-caption">Gráfico 4: Matriz de Confusión del Clasificador ResNet18 (Valores Absolutos en Test Set)</div>
+                    </div>
+                    
+                    <p>
+                        El análisis de la matriz de confusión revela que los mayores desafíos de clasificación se presentan entre clases visualmente simétricas (ej: <code>c1</code> texting mano derecha vs <code>c2</code> teléfono mano derecha), mientras que la clase <code>c0</code> (conducción segura) obtuvo las métricas más robustas (F1 = 0.92), garantizando un margen de seguridad ideal para su despliegue comercial.
+                    </p>
+                </section>
+                
+                <!-- 📋 SECCIÓN 5: Módulo 3 -->
+                <section id="modulo3" class="report-section">
+                    <h2>5. Módulo 3: Sistema de Recomendación de Viajes</h2>
+                    
+                    <h3>5.1 Descripción del Problema</h3>
+                    <p>
+                        Los viajeros se enfrentan a catálogos masivos y carecen de herramientas que interpreten de forma precisa sus gustos implícitos de viaje. El Filtrado Colaborativo Neuronal (NCF) mapea usuarios y destinos turísticos en vectores latentes de baja dimensión (embeddings) y modela sus interacciones no lineales complejas mediante una red neuronal profunda.
+                    </p>
+                    
+                    <h3>5.2 Especificaciones del Dataset Real</h3>
+                    <p>
+                        El sistema fue entrenado con la base de datos real de reseñas y destinos de Kaggle en la India:
+                    </p>
+                    <ul>
+                        <li><p><strong>Usuarios únicos:</strong> 624 usuarios reales.</p></li>
+                        <li><p><strong>Destinos turísticos calificados:</strong> 651 destinos únicos de un catálogo de 1,000.</p></li>
+                        <li><p><strong>Interacciones históricas:</strong> 999 registros consolidados.</p></li>
+                        <li><p><strong>Densidad de la matriz:</strong> <strong>0.24% (Dispersión extrema del 99.76%)</strong>. Este es un desafío masivo del "mundo real", con un promedio de tan solo 1.6 calificaciones por usuario.</p></li>
+                    </ul>
+                    
+                    <h3>5.3 Arquitectura Neural Collaborative Filtering (NCF)</h3>
+                    <p>
+                        La arquitectura recibe los identificadores del usuario y del destino turístico, los mapea a capas de embeddings de 32 dimensiones, los concatena y los procesa a través de tres capas lineales ocultas MLP (Multilayer Perceptron):
+                    </p>
+                    
+                    <div class="mermaid-diagram-card">
+                        <div class="mermaid">
+                            graph TD
+                                U["User ID"] --> UE["User Embedding\n(32 dim)"]
+                                I["Destination ID"] --> IE["Item Embedding\n(32 dim)"]
+                                UE --> C["Concatenación\n(64 dim)"]
+                                IE --> C
+                                C --> L1["Linear 64 → 64\n+ ReLU + Dropout(0.2)"]
+                                L1 --> L2["Linear 64 → 32\n+ ReLU + Dropout(0.2)"]
+                                L2 --> L3["Linear 32 → 16\n+ ReLU"]
+                                L3 --> O["Linear 16 → 1\n+ Sigmoid"]
+                                O --> P["Probabilidad de Interacción\n(Rating Estimado)"]
+                                
+                                style UE fill:#85C1E9,color:#000
+                                style IE fill:#85C1E9,color:#000
+                                style C fill:#F9E79F,color:#000
+                                style O fill:#2ECC71,color:#fff
+                        </div>
+                        <div class="image-caption">Arquitectura detallada del recomendador NCF</div>
+                    </div>
+                    
+                    <h3>5.4 Negative Sampling y Evaluación Cuantitativa</h3>
+                    <p>
+                        Dado que los datos de Kaggle solo contienen interacciones positivas (reviews hechas), aplicamos una ratio de **4:1 de negative sampling** (4 destinos no visitados agregados con etiqueta 0 por cada interacción real 1) para permitir el entrenamiento supervisado contrastivo.
+                    </p>
+                    <p>
+                        Las métricas alcanzadas sobre el conjunto de test reflejan de forma honesta el reto planteado por la escasez crítica de interacciones:
+                    </p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Métrica de Ranking</th>
+                                    <th>Valor Obtenido</th>
+                                    <th>Significado Académico e Industrial</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Precision@5</strong></td>
+                                    <td>0.0009</td>
+                                    <td>Proporción de aciertos exactos en las 5 recomendaciones principales.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Recall@5</strong></td>
+                                    <td>0.0045</td>
+                                    <td>Capacidad de capturar el destino deseado de prueba del usuario.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>NDCG@10</strong></td>
+                                    <td>0.0042</td>
+                                    <td>Métrica de ganancia acumulada descontada que penaliza aciertos tardíos en el ranking.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="image-showcase">
+                        <div class="image-showcase-container">
+                            <img src="images/image5.png" alt="Interfaz de recomendaciones NCF">
+                        </div>
+                        <div class="image-caption">Gráfico 5: Interfaz del Módulo de Recomendaciones de Viajes NCF e Indicadores Cuantitativos en el Portal Web</div>
+                    </div>
+                    
+                    <p>
+                        <strong>Análisis del Fenómeno de Cold Start:</strong> Si bien el modelo minimiza eficazmente el error binario en entrenamiento (la BCE Loss disminuyó de 0.6859 a 0.0379), la generalización del recomendador colaborativo puro en ambientes reales se ve drásticamente limitada por la dispersión extrema de datos. Esto ejemplifica la importancia de migrar hacia sistemas de recomendación de tipo híbrido (combina embeddings colaborativos con metadatos de destino de tipo Content-Based procesados con embeddings de texto).
+                    </p>
+                </section>
+                
+                <!-- 📋 SECCIÓN 6: Herramienta Web -->
+                <section id="web-app" class="report-section">
+                    <h2>6. Herramienta Web</h2>
+                    
+                    <h3>6.1 Arquitectura e Integración de Modelos</h3>
+                    <p>
+                        Los tres módulos se integraron en una aplicación web interactiva desarrollada en **Flask** que permite realizar inferencias en tiempo real con las redes neuronales cargadas en memoria.
+                    </p>
+                    
+                    <div class="mermaid-diagram-card">
+                        <div class="mermaid">
+                            graph TD
+                                UI["🌐 Cliente (HTML5 + CSS + JS)"] <-->|"AJAX (JSON)"| R["🖥️ Servidor Flask (app.py)"]
+                                R --> M1["Módulo 1\nLSTM Inference"]
+                                R --> M2["Módulo 2\nResNet18 Inference"]
+                                R --> M3["Módulo 3\nNCF Recommendations"]
+                                M1 & M2 & M3 <--> P["💾 Parámetros Serializados (.pt / .pkl)"]
+                                
+                                style UI fill:#E8F4F8,stroke:#2E86AB,color:#000
+                                style R fill:#F0FFF4,stroke:#27AE60,color:#000
+                                style P fill:#FFF9E6,stroke:#F39C12,color:#000
+                        </div>
+                        <div class="image-caption">Arquitectura cliente-servidor de la plataforma web</div>
+                    </div>
+                    
+                    <h3>6.2 Guía de Uso del Portal Web</h3>
+                    <p>
+                        La aplicación ofrece interfaces específicas para interactuar con cada red de forma visual:
+                    </p>
+                    
+                    <div class="image-showcase">
+                        <div class="image-showcase-container">
+                            <img src="images/image6.png" alt="Pantalla de Inicio de la Web App">
+                        </div>
+                        <div class="image-caption">Gráfico 6: Panel de Inicio General e Interfaz Principal de Módulos (NeuralTransit Lab)</div>
+                    </div>
+                    
+                    <ul>
+                        <li><p><strong>Módulo 1:</strong> Permite seleccionar un destino y un horizonte de tiempo (1-30 días) para renderizar dinámicamente un gráfico SVG interactivo con las demandas históricas y el pronóstico de pasajeros.</p></li>
+                        <li><p><strong>Módulo 2:</strong> Permite cargar una foto desde el navegador y muestra de forma inmediata la clasificación del conductor, su porcentaje de confianza y el nivel de riesgo en la pantalla.</p></li>
+                        <li><p><strong>Módulo 3:</strong> Permite ingresar un ID de usuario del conjunto de pruebas y despliega la lista del top-5 de destinos turísticos personalizados con su respectiva calificación predictiva.</p></li>
+                    </ul>
+                </section>
+                
+                <!-- 📋 SECCIÓN 7: Aspectos Éticos -->
+                <section id="etica" class="report-section">
+                    <h2>7. Aspectos Éticos</h2>
+                    
+                    <h3>7.1 Privacidad en la Vigilancia Biométrica</h3>
+                    <p>
+                        El procesamiento de flujos de imágenes biométricas continuas de conductores al volante por parte del Módulo 2 implica consideraciones éticas muy serias. Bajo la legislación colombiana (<strong>Ley 1581 de 2012 de Habeas Data</strong>), las imágenes faciales son catalogadas como datos sensibles. 
+                    </p>
+                    <p>
+                        Es obligatorio obtener el consentimiento explícito e informado de los operarios antes de activar cualquier solución y asegurar que las inferencias ocurran localmente en memoria volátil de forma efímera, destruyendo el fotograma crudo inmediatamente después de reportar la clasificación.
+                    </p>
+                    
+                    <h3>7.2 Sesgos Demográficos en Visión Artificial</h3>
+                    <p>
+                        Los modelos de detección de conductores a menudo exhiben sesgos demográficos heredados de los conjuntos de datos públicos (subrepresentación de ciertos géneros o etnias). Un error sistemático del modelo al reportar falsas alertas distraídas a conductores de ciertos grupos demográficos puede derivar en penalizaciones laborales injustas. Se recomienda auditar permanentemente el rendimiento diferenciado antes de desplegar estas soluciones en flotas reales.
+                    </p>
+                    
+                    <h3>7.3 Popularity Bias e Incubación de Filtros</h3>
+                    <p>
+                        En recomendación, el sesgo hacia ítems altamente populares (Cartagena, Taj Mahal) puede marginar destinos locales más pequeños y valiosos. Esto perpetúa desigualdades económicas en el desarrollo del turismo. El uso de técnicas de negative sampling y métricas de diversidad resulta indispensable para contrarrestar este fenómeno y potenciar equitativamente las regiones emergentes.
+                    </p>
+                </section>
+                
+                <!-- 📋 SECCIÓN 8: Conclusiones -->
+                <section id="conclusiones" class="report-section">
+                    <h2>8. Conclusiones y Trabajo Futuro</h2>
+                    
+                    <div class="card-grid">
+                        <div class="premium-card">
+                            <div class="card-icon"><i class="fa-solid: fa-road"></i></div>
+                            <h4>Predicción Estable</h4>
+                            <p>El Módulo 1 validó que una LSTM de dos capas puede predecir con alta precisión (MAPE 8.1%) ciclos estacionales de transporte, ofreciendo planes de acción preventivos para transportadores.</p>
+                        </div>
+                        <div class="premium-card">
+                            <div class="card-icon"><i class="fa-solid: fa-camera"></i></div>
+                            <h4>Visión Adaptada</h4>
+                            <p>ResNet18 demostró el enorme potencial del Transfer Learning, permitiendo con solo 2,000 imágenes ajustadas un excelente clasificador de conductas de cabina con un F1-macro de 0.843.</p>
+                        </div>
+                        <div class="premium-card">
+                            <div class="card-icon"><i class="fa-solid: fa-database"></i></div>
+                            <h4>Límite de Dispersión</h4>
+                            <p>El recomendador colaborativo NCF demostró de manera empírica que el filtrado puro sufre severamente en escenarios de datos reales altamente dispersos (0.24%), invitando a diseñar sistemas híbridos.</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Trabajo Futuro y Próximos Pasos</h3>
+                    <ul>
+                        <li><p><strong>Módulo 1:</strong> Migrar hacia una arquitectura de tipo LSTM multivariado que integre variables exógenas como el clima, feriados nacionales y precios en tiempo real de tiquetes para refinar el error diario.</p></li>
+                        <li><p><strong>Módulo 2:</strong> Incorporar explicabilidad visual mediante mapas de calor <strong>Grad-CAM</strong>, lo cual permitirá pintar en la imagen las zonas exactas que motivaron la alerta de distracción (ej: marcar la mano sosteniendo el celular), incrementando la transparencia del sistema.</p></li>
+                        <li><p><strong>Módulo 3:</strong> Implementar un modelo híbrido enriqueciendo la entrada NCF con embeddings de texto de catálogos turísticos procesados mediante un Transformer preentrenado (BERT), reduciendo los impactos del problema de cold start.</p></li>
+                    </ul>
+                </section>
+                
+                <!-- 📋 SECCIÓN: Referencias -->
+                <section id="referencias" class="report-section">
+                    <h2>Referencias</h2>
+                    <ol style="margin-left: 1.5rem; color: var(--text-secondary); line-height: 1.8;">
+                        <li><p>Hochreiter, S., &amp; Schmidhuber, J. (1997). Long short-term memory. <em>Neural computation</em>, 9(8), 1735-1780. <a href="https://doi.org/10.1162/neco.1997.9.8.1735" target="_blank">https://doi.org/10.1162/neco.1997.9.8.1735</a></p></li>
+                        <li><p>He, K., Zhang, X., Ren, S., &amp; Sun, J. (2016). Deep residual learning for image recognition. In <em>Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition</em> (pp. 770-778). <a href="https://arxiv.org/abs/1512.03385" target="_blank">https://arxiv.org/abs/1512.03385</a></p></li>
+                        <li><p>He, X., Liao, L., Zhang, H., Nie, L., Hu, X., &amp; Chua, T. S. (2017). Neural collaborative filtering. In <em>Proceedings of the 26th International Conference on World Wide Web</em> (pp. 173-182). <a href="https://arxiv.org/abs/1708.05031" target="_blank">https://arxiv.org/abs/1708.05031</a></p></li>
+                        <li><p>Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., ... &amp; Chintala, S. (2019). PyTorch: An imperative style, high-performance deep learning library. <em>Advances in Neural Information Processing Systems</em>, 32.</p></li>
+                        <li><p>Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). <em>Deep learning</em>. MIT Press. <a href="https://www.deeplearningbook.org/" target="_blank">https://www.deeplearningbook.org/</a></p></li>
+                        <li><p>Ruder, S. (2016). An overview of gradient descent optimization algorithms. <em>arXiv preprint arXiv:1609.04747</em>.</p></li>
+                        <li><p>Kingma, D. P., &amp; Ba, J. (2014). Adam: A method for stochastic optimization. <em>arXiv preprint arXiv:1412.6980</em>.</p></li>
+                        <li><p>Yao, Q., Wang, M., Chen, Y., Dai, W., Li, Y. F., Tu, W. W., ... &amp; Yang, Q. (2018). Taking human out of learning applications: A survey on automated machine learning. <em>arXiv preprint arXiv:1810.13306</em>.</p></li>
+                        <li><p>Doshi-Velez, F., &amp; Kim, B. (2017). Towards a rigorous science of interpretable machine learning. <em>arXiv preprint arXiv:1702.08608</em>.</p></li>
+                        <li><p>Varios Autores. (2022). <em>Informe de accidentalidad vial en Colombia 2022</em>. Instituto Nacional de Medicina Legal y Ciencias Forenses. Bogotá, Colombia.</p></li>
+                        <li><p>Ministerio de Comercio, Industria y Turismo de Colombia. (2024). <em>Estadísticas de turismo en Colombia - Informe anual 2024</em>. Bogotá: MINCIT.</p></li>
+                        <li><p>Elkan, C. (2011). Evaluating classifiers. In <em>UC San Diego Lecture Notes on Machine Learning</em>. <a href="https://cseweb.ucsd.edu/~elkan/250Bfall2007/classif.pdf" target="_blank">https://cseweb.ucsd.edu/~elkan/250Bfall2007/classif.pdf</a></p></li>
+                        <li><p>Sarwar, B., Karypis, G., Konstan, J., &amp; Riedl, J. (2001). Item-based collaborative filtering recommendation algorithms. In <em>Proceedings of the 10th International Conference on World Wide Web</em> (pp. 285-295).</p></li>
+                        <li><p>Leskovec, J., Rajaraman, A., &amp; Ullman, J. D. (2020). <em>Mining of massive data sets</em> (3rd ed.). Cambridge University Press. <a href="http://www.mmds.org/" target="_blank">http://www.mmds.org/</a></p></li>
+                        <li><p>Colombia. Congreso de la República. (2012). <em>Ley 1581 de 2012: Por la cual se dictan disposiciones generales para la protección de datos personales</em>. Diario Oficial.</p></li>
+                    </ol>
+                </section>
+                
+            </div>
+        </main>
+    </div>
+
+    <!-- Script de Interactividad -->
+    <script src="script.js"></script>
+</body>
+</html>
