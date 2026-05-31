@@ -238,6 +238,7 @@ def classify_image():
         tensor = transform(img).unsqueeze(0) # [1, 3, 224, 224]
         
         # Inference using the real model
+        real_model.eval()
         with torch.no_grad():
             outputs = real_model(tensor)
             probs = torch.softmax(outputs, dim=1).squeeze(0).numpy().tolist()
