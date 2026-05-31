@@ -16,7 +16,7 @@
     <a href="/" class="nav-brand">
       <div class="nav-brand-icon">🧠</div>
       <div>
-        <span class="nav-brand-text">IRNA Trabajo 3</span>
+        <span class="nav-brand-text">NeuralTransit Lab</span>
         <span class="nav-brand-sub">Universidad Nacional de Colombia</span>
       </div>
     </a>
@@ -121,8 +121,8 @@
       <div class="flex-between mb-2">
         <h3>📉 Serie de Tiempo</h3>
         <div style="display:flex;gap:0.5rem;align-items:center;font-size:0.78rem;">
-          <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:3px;background:#6c63ff;border-radius:2px;display:inline-block;"></span>Histórico</span>
-          <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:3px;background:#00d2ff;border-radius:2px;display:inline-block;"></span>Pronóstico</span>
+          <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:3px;background:#006633;border-radius:2px;display:inline-block;"></span>Histórico</span>
+          <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:3px;background:#c59b27;border-radius:2px;display:inline-block;"></span>Pronóstico</span>
         </div>
       </div>
 
@@ -176,7 +176,7 @@
 </div>
 
 <footer>
-  <p>🧠 <strong>IRNA · Trabajo 3</strong> · Universidad Nacional de Colombia · 2026</p>
+  <p>🧠 <strong>NeuralTransit Lab · Trabajo 3</strong> · Universidad Nacional de Colombia · 2026</p>
 </footer>
 
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
@@ -234,8 +234,8 @@ function renderDemandChart(data) {
         {
           label: 'Histórico',
           data: histData,
-          borderColor: '#6c63ff',
-          backgroundColor: 'rgba(108,99,255,0.08)',
+          borderColor: '#006633',
+          backgroundColor: 'rgba(0, 102, 51, 0.08)',
           borderWidth: 2,
           pointRadius: 0,
           fill: true,
@@ -245,8 +245,8 @@ function renderDemandChart(data) {
         {
           label: 'Pronóstico 30 días',
           data: foreData,
-          borderColor: '#00d2ff',
-          backgroundColor: 'rgba(0,210,255,0.08)',
+          borderColor: '#c59b27',
+          backgroundColor: 'rgba(197, 155, 39, 0.08)',
           borderWidth: 2.5,
           borderDash: [6, 3],
           pointRadius: 0,

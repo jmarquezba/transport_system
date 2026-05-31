@@ -15,7 +15,7 @@
     <a href="/" class="nav-brand">
       <div class="nav-brand-icon">🧠</div>
       <div>
-        <span class="nav-brand-text">IRNA Trabajo 3</span>
+        <span class="nav-brand-text">NeuralTransit Lab</span>
         <span class="nav-brand-sub">Universidad Nacional de Colombia</span>
       </div>
     </a>
@@ -30,17 +30,17 @@
 
 <!-- ── Hero ───────────────────────────────────────────────── -->
 <section class="hero">
-  <div class="hero-badge animate-in">🎓 Universidad Nacional de Colombia · IRNA 2026</div>
+  <div class="hero-badge animate-in">🎓 UNIVERSIDAD NACIONAL DE COLOMBIA · DEP. INGENIERÍA DE SISTEMAS</div>
   <h1 class="hero-title animate-in delay-1">
-    <span class="gradient-text">Inteligencia Artificial</span><br/>
-    para Turismo y Movilidad
+    <span class="gradient-text">NeuralTransit Lab</span><br/>
+    Sistemas Inteligentes de Movilidad y Turismo
   </h1>
   <p class="hero-subtitle animate-in delay-2">
-    Tres módulos de redes neuronales artificiales que predicen demanda, clasifican comportamiento al volante y recomiendan destinos de viaje personalizados.
+    Modelado avanzado con Redes Neuronales Artificiales aplicado a la predicción de demanda de transporte, clasificación de conducta de conductores y recomendación personalizada de destinos en Latinoamérica.
   </p>
   <div class="animate-in delay-3" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-    <a href="/modulo1" class="btn btn-primary">Explorar módulos →</a>
-    <a href="https://github.com" target="_blank" class="btn btn-secondary">Ver código</a>
+    <a href="/modulo1" class="btn btn-primary">Iniciar Panel de Módulos →</a>
+    <a href="https://github.com/jmarquezba/transport_system" target="_blank" class="btn btn-secondary">Repositorio Institucional</a>
   </div>
 </section>
 
@@ -60,8 +60,8 @@
       <div class="lbl">Destinos latinoam.</div>
     </div>
     <div class="stat-box">
-      <div class="num">10</div>
-      <div class="lbl">Clases de distracción</div>
+      <div class="num">5</div>
+      <div class="lbl">Comportamientos al volante</div>
     </div>
   </div>
 </div>
@@ -76,7 +76,7 @@
 
     <div class="grid-3 mt-3">
       <!-- M1 -->
-      <a href="/modulo1" class="card module-card animate-in delay-1">
+      <a href="/modulo1" class="card module-card m1 animate-in delay-1">
         <div class="module-card-icon m1">📈</div>
         <h3>Módulo 1 · Predicción de Demanda</h3>
         <p>Modelo LSTM de dos capas que predice la demanda diaria de transporte turístico para los principales destinos colombianos con un horizonte de 30 días.</p>
@@ -91,10 +91,10 @@
       </a>
 
       <!-- M2 -->
-      <a href="/modulo2" class="card module-card animate-in delay-2">
+      <a href="/modulo2" class="card module-card m2 animate-in delay-2">
         <div class="module-card-icon m2">🚗</div>
         <h3>Módulo 2 · Clasificación CNN</h3>
-        <p>ResNet18 con Transfer Learning que detecta 10 tipos de comportamiento distraído al conducir. Sube una imagen y obtén la categoría predicha con su nivel de confianza.</p>
+        <p>ResNet18 con Transfer Learning que clasifica 5 categorías de conducción segura y distraída. Sube una imagen y obtén la categoría predicha con su nivel de confianza.</p>
         <div>
           <span class="module-card-tag tag-red">ResNet18 · CNN</span>
           <span class="module-card-tag tag-red" style="margin-left:0.5rem">Transfer Learning</span>
@@ -106,7 +106,7 @@
       </a>
 
       <!-- M3 -->
-      <a href="/modulo3" class="card module-card animate-in delay-3">
+      <a href="/modulo3" class="card module-card m3 animate-in delay-3">
         <div class="module-card-icon m3">🌎</div>
         <h3>Módulo 3 · Recomendación NCF</h3>
         <p>Neural Collaborative Filtering que aprende preferencias implícitas de usuarios y recomienda los 5 destinos turísticos latinoamericanos más afines a cada perfil.</p>
@@ -139,7 +139,7 @@
           </li>
           <li style="display:flex;align-items:flex-start;gap:1rem;">
             <span style="background:rgba(255,107,107,0.15);border-radius:8px;padding:0.5rem;font-size:1.2rem;">🔍</span>
-            <div><strong>ResNet18 con Transfer Learning</strong><br/><span class="text-secondary" style="font-size:0.88rem;">Pesos de ImageNet, fine-tuning en layer4 + cabeza FC personalizada (512→256→10).</span></div>
+            <div><strong>ResNet18 con Transfer Learning</strong><br/><span class="text-secondary" style="font-size:0.88rem;">Pesos de ImageNet, fine-tuning en layer4 + cabeza FC personalizada (512→256→5).</span></div>
           </li>
           <li style="display:flex;align-items:flex-start;gap:1rem;">
             <span style="background:rgba(0,210,255,0.15);border-radius:8px;padding:0.5rem;font-size:1.2rem;">🧩</span>
@@ -198,7 +198,7 @@
 <!-- ── Footer ──────────────────────────────────────────────── -->
 <footer>
   <p>
-    🧠 <strong>IRNA · Trabajo 3</strong> · Universidad Nacional de Colombia · Semestre 9, 2026<br/>
+    🧠 <strong>NeuralTransit Lab · Trabajo 3</strong> · Universidad Nacional de Colombia · Semestre 9, 2026<br/>
     <span style="color:var(--text-muted);">Redes Neuronales Aplicadas al Turismo y la Seguridad Vial</span>
   </p>
 </footer>
