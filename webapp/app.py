@@ -95,66 +95,95 @@ _PREVENTIVE = {
     "c8":"No arreglarse mientras conduce.","c9":"Limitar conversaciones en maniobras críticas.",
 }
 
-# ── M1: LSTM ──────────────────────────────────────────────────────────────────
-lstm_states = scaler_dem = routes_meta = None
+# ── Carga de Metadatos (Inmediata y Rápida) ───────────────────────────────────
+scaler_dem = routes_meta = None
 _lstm_routes = []
 try:
-    lstm_states  = torch.load(MODELS_DIR/"lstm_demanda.pt",    map_location=_CPU)
     scaler_dem   = pickle.load(open(MODELS_DIR/"scaler_demanda.pkl","rb"))
     routes_meta  = pickle.load(open(MODELS_DIR/"routes_metadata.pkl","rb"))
-    _lstm_routes = list(lstm_states.keys())
-    print(f"  [OK] LSTM — rutas: {_lstm_routes}")
+    _lstm_routes = list(routes_meta.keys())
+    print(f"  [OK] Metadatos LSTM cargados: {_lstm_routes}")
 except Exception as e:
-    print(f"  [WARN] LSTM: {e}")
+    print(f"  [WARN] Error cargando metadatos LSTM: {e}")
 
-# ── M2: ResNet18 ──────────────────────────────────────────────────────────────
-cnn_model = None; cnn_classes = []; n_cnn = 0
+cnn_classes = []
+n_cnn = 0
 try:
-    data = torch.load(MODELS_DIR/"resnet18_driver.pt", map_location=_CPU)
-    if isinstance(data, dict) and "state_dict" in data:
-        sd = data["state_dict"]; cnn_classes = data.get("class_names", [])
-    else:
-        sd = data; cnn_classes = []
-
-    # Leer class_names.pkl si existe y tiene contenido
     pkl = MODELS_DIR/"class_names.pkl"
     if pkl.exists() and pkl.stat().st_size > 10:
         cnn_classes = pickle.load(open(pkl,"rb"))
-
-    # Inferir n_clases del último Linear del state_dict
-    n_cnn = len(cnn_classes)
-    if n_cnn == 0:
-        for k in reversed(list(sd.keys())):
-            if "weight" in k and sd[k].ndim == 2:
-                n_cnn = sd[k].shape[0]; break
-    if n_cnn == 0: raise ValueError("No se pudo determinar n_clases del CNN")
-    if len(cnn_classes) != n_cnn:
-        cnn_classes = [f"c{i}" for i in range(n_cnn)]
-
-    cnn_model = build_resnet(n_cnn)
-    cnn_model.load_state_dict(sd)
-    cnn_model.eval()
-    print(f"  [OK] ResNet18 — {n_cnn} clases: {cnn_classes}")
+        n_cnn = len(cnn_classes)
+        print(f"  [OK] Clases CNN cargadas: {cnn_classes}")
 except Exception as e:
-    print(f"  [WARN] CNN: {e}")
+    print(f"  [WARN] Error cargando clases CNN: {e}")
 
-# ── M3: NCF ───────────────────────────────────────────────────────────────────
-ncf_model = ncf_meta = None
+ncf_meta = None
 try:
     ncf_meta  = pickle.load(open(MODELS_DIR/"ncf_metadata.pkl","rb"))
-    n_u = ncf_meta["n_users"]; n_i = ncf_meta["n_items"]
-    emb = ncf_meta.get("emb_dim", 16)
-    # Soportar tanto NCF como NeuMF según model_type
-    if ncf_meta.get("model_type") == "NeuMF":
-        from webapp.app import NeuMF   # fallback si existe
-        ncf_model = NeuMF(n_u, n_i, emb, emb)
-    else:
-        ncf_model = NCF(n_u, n_i, emb)
-    ncf_model.load_state_dict(torch.load(MODELS_DIR/"ncf_model.pt", map_location=_CPU))
-    ncf_model.eval()
-    print(f"  [OK] NCF — {n_u}u × {n_i}i emb={emb} type={ncf_meta.get('model_type','NCF')}")
+    print("  [OK] Metadatos NCF cargados")
 except Exception as e:
-    print(f"  [WARN] NCF: {e}")
+    print(f"  [WARN] Error cargando metadatos NCF: {e}")
+
+
+# ── Lazy Loaders para Modelos Pesados ─────────────────────────────────────────
+lstm_states = None
+def get_lstm_states():
+    global lstm_states
+    if lstm_states is None:
+        try:
+            print("  [LAZY] Cargando pesos LSTM...")
+            lstm_states = torch.load(MODELS_DIR/"lstm_demanda.pt", map_location=_CPU)
+            print("  [LAZY] Pesos LSTM cargados con éxito")
+        except Exception as e:
+            print(f"  [WARN] Error al cargar pesos LSTM: {e}")
+    return lstm_states
+
+cnn_model = None
+def get_cnn_model():
+    global cnn_model, cnn_classes, n_cnn
+    if cnn_model is None:
+        try:
+            print("  [LAZY] Cargando modelo ResNet18...")
+            data = torch.load(MODELS_DIR/"resnet18_driver.pt", map_location=_CPU)
+            if isinstance(data, dict) and "state_dict" in data:
+                sd = data["state_dict"]
+            else:
+                sd = data
+
+            if n_cnn == 0:
+                # Fallback inferring classes
+                for k in reversed(list(sd.keys())):
+                    if "weight" in k and sd[k].ndim == 2:
+                        n_cnn = sd[k].shape[0]
+                        break
+                if n_cnn == 0:
+                    n_cnn = 5
+                cnn_classes = [f"c{i}" for i in range(n_cnn)]
+
+            cnn_model = build_resnet(n_cnn)
+            cnn_model.load_state_dict(sd)
+            cnn_model.eval()
+            print("  [LAZY] Modelo ResNet18 cargado con éxito")
+        except Exception as e:
+            print(f"  [WARN] Error al cargar CNN: {e}")
+    return cnn_model
+
+ncf_model = None
+def get_ncf_model():
+    global ncf_model, ncf_meta
+    if ncf_model is None:
+        try:
+            print("  [LAZY] Cargando modelo NCF...")
+            n_u = ncf_meta["n_users"]
+            n_i = ncf_meta["n_items"]
+            emb = ncf_meta.get("emb_dim", 16)
+            ncf_model = NCF(n_u, n_i, emb)
+            ncf_model.load_state_dict(torch.load(MODELS_DIR/"ncf_model.pt", map_location=_CPU))
+            ncf_model.eval()
+            print("  [LAZY] Modelo NCF cargado con éxito")
+        except Exception as e:
+            print(f"  [WARN] Error al cargar NCF: {e}")
+    return ncf_model
 
 # ═══════════════════════════════════════════════════════════════════════════════
 app = Flask(__name__)
@@ -185,11 +214,12 @@ def modulo3():
 # ── API M1: Predicción de demanda ─────────────────────────────────────────────
 @app.route("/api/predict_demand", methods=["POST"])
 def predict_demand():
-    if lstm_states is None:
+    states = get_lstm_states()
+    if states is None:
         return jsonify({"error": "Modelo LSTM no cargado."}), 503
 
     dest = (request.get_json(silent=True) or {}).get("destination", _lstm_routes[0] if _lstm_routes else "")
-    if dest not in lstm_states:
+    if dest not in states:
         return jsonify({"error": f"Destino no válido. Opciones: {_lstm_routes}"}), 400
 
     try:
@@ -228,7 +258,7 @@ def predict_demand():
 
             x = torch.tensor(feat[None], dtype=torch.float32)
             model = Seq2SeqLSTM(forecast_steps=30)
-            model.load_state_dict(lstm_states[dest])
+            model.load_state_dict(states[dest])
             model.eval()
             with torch.no_grad():
                 fore_sc = model(x).cpu().numpy().flatten()
@@ -271,7 +301,8 @@ _tf = transforms.Compose([
 
 @app.route("/api/classify_image", methods=["POST"])
 def classify_image():
-    if cnn_model is None:
+    model = get_cnn_model()
+    if model is None:
         return jsonify({"error": "Modelo CNN no cargado."}), 503
     if "image" not in request.files:
         return jsonify({"error": "Campo 'image' requerido."}), 400
@@ -279,7 +310,7 @@ def classify_image():
         img    = Image.open(request.files["image"].stream).convert("RGB")
         tensor = _tf(img).unsqueeze(0)
         with torch.no_grad():
-            probs = torch.softmax(cnn_model(tensor), dim=1).squeeze(0).numpy().tolist()
+            probs = torch.softmax(model(tensor), dim=1).squeeze(0).numpy().tolist()
         idx   = int(np.argmax(probs))
         label = cnn_classes[idx] if idx < len(cnn_classes) else f"c{idx}"
         return jsonify({
@@ -298,7 +329,8 @@ def classify_image():
 # ── API M3: Recomendaciones ───────────────────────────────────────────────────
 @app.route("/api/get_recommendations", methods=["POST"])
 def get_recommendations():
-    if ncf_model is None or ncf_meta is None:
+    model = get_ncf_model()
+    if model is None or ncf_meta is None:
         return jsonify({"error": "Modelo NCF no cargado."}), 503
     data = request.get_json(silent=True) or {}
     try:
@@ -325,7 +357,7 @@ def get_recommendations():
         u_t = torch.tensor([u_enc]*len(valid_encs), dtype=torch.long)
         i_t = torch.tensor(valid_encs, dtype=torch.long)
         with torch.no_grad():
-            scores = np.atleast_1d(ncf_model(u_t, i_t).numpy())
+            scores = np.atleast_1d(model(u_t, i_t).numpy())
 
         # Get user preferences from metadata
         user_prefs_list = ncf_meta.get("user_preferences", {}).get(uid, [])
