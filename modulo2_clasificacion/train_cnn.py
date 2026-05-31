@@ -24,8 +24,8 @@ from sklearn.metrics import (accuracy_score, f1_score, precision_score,
 SEED = 42
 np.random.seed(SEED); torch.manual_seed(SEED)
 
-EPOCHS = 15; BATCH_SIZE = 32; LR = 1e-4; IMG_SIZE = 224; PATIENCE = 4
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+EPOCHS = 25; BATCH_SIZE = 32; LR = 1e-4; IMG_SIZE = 224; PATIENCE = 6
+device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 print(f"Dispositivo: {device}")
 
 BASE_DIR   = Path(__file__).resolve().parent
@@ -47,30 +47,42 @@ def download_dataset() -> Path:
 
     print(f"  Raw path: {raw}")
 
-    # Buscar el directorio que tenga subcarpetas con imágenes
-    # Acepta CUALQUIER nombre de carpeta (safe_driving, c0, etc.)
+    # Buscar el directorio que tenga subcarpetas con imágenes de forma extremadamente rápida
     best_dir   = None
     best_count = 0
-    for candidate in [raw, *raw.rglob("*")]:
+    search_paths = [raw]
+    try:
+        for p in raw.iterdir():
+            if p.is_dir() and not p.name.startswith("."):
+                search_paths.append(p)
+                for sub_p in p.iterdir():
+                    if sub_p.is_dir() and not sub_p.name.startswith("."):
+                        search_paths.append(sub_p)
+    except Exception:
+        pass
+
+    for candidate in search_paths:
         candidate = Path(candidate)
-        if not candidate.is_dir():
+        try:
+            subdirs = [d for d in candidate.iterdir() if d.is_dir() and not d.name.startswith(".")]
+            if len(subdirs) < 2:
+                continue
+            total_imgs = 0
+            for sd in subdirs:
+                total_imgs += sum(1 for f in sd.iterdir() if f.is_file() and f.suffix.lower() in [".jpg", ".jpeg", ".png", ".bmp"])
+            if total_imgs > best_count:
+                best_count = total_imgs
+                best_dir   = candidate
+        except Exception:
             continue
-        subdirs = [d for d in candidate.iterdir() if d.is_dir()]
-        if len(subdirs) < 2:
-            continue
-        # Contar imágenes totales en subdirectorios
-        total_imgs = 0
-        for sd in subdirs:
-            total_imgs += len(list(sd.glob("*.jpg")) + list(sd.glob("*.png"))
-                              + list(sd.glob("*.jpeg")) + list(sd.glob("*.bmp")))
-        if total_imgs > best_count:
-            best_count = total_imgs
-            best_dir   = candidate
 
     if best_dir is None or best_count == 0:
         print(f"Contenido de {raw}:")
-        for p in sorted(raw.rglob("*")):
-            if p.is_dir(): print(f"  DIR: {p}")
+        try:
+            for p in sorted(raw.iterdir()):
+                print(f"  Item: {p.name} (is_dir={p.is_dir()})")
+        except Exception:
+            pass
         sys.exit("No se encontraron carpetas con imágenes en el dataset.")
 
     # Listar clases detectadas
