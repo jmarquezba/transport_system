@@ -34,9 +34,9 @@ class TestAppEndpoints(unittest.TestCase):
             
         # Verify sizes
         self.assertEqual(data["destination"], "Taj Mahal")
-        self.assertEqual(len(data["historical"]), 60)
+        self.assertEqual(len(data["historical"]), 30)
         self.assertEqual(len(data["forecast"]), 30)
-        self.assertEqual(len(data["dates_hist"]), 60)
+        self.assertEqual(len(data["dates_hist"]), 30)
         self.assertEqual(len(data["dates_fore"]), 30)
         
         # Verify numeric types

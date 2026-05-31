@@ -2,9 +2,8 @@
 # Trabajo 3 - IRNA - Universidad Nacional de Colombia 2026
 # ============================================================
 
-# Deep Learning
-torch>=2.1.0
-torchvision>=0.16.0
+# Deep Learning / Inference (Reemplaza PyTorch y torchvision)
+onnxruntime>=1.16.0
 
 # Data Science
 numpy>=1.24.0
