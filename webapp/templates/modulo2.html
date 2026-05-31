@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulo 2 — Clasificación CNN · IRNA</title>
+  <meta name="description" content="Clasificación de comportamiento de conductores con ResNet18. Sube una imagen y detecta distracciones al volante." />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ── Navbar ─────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-brand">
+      <div>
+        <span class="nav-brand-text">Redes Neuronales Y Algoritmos Bioinspirados - Trabajo 3</span>
+        <span class="nav-brand-sub">Universidad Nacional Sede Medellín</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Inicio</a></li>
+      <li><a href="/modulo1">Demanda</a></li>
+      <li><a href="/modulo2">Clasificación</a></li>
+      <li><a href="/modulo3">Recomendación</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header animate-in">
+    <div class="breadcrumb">
+      <a href="/">Inicio</a> › <span>Módulo 2</span>
+    </div>
+    <div class="flex-between">
+      <div>
+        <h1 class="page-title">Clasificación de Conducta</h1>
+        <p class="page-subtitle">ResNet18 Transfer Learning · 5 clases de comportamiento al volante</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="align-items:start;">
+
+    <!-- ── Upload Panel ─────────────────────────────────────── -->
+    <div>
+      <div class="card animate-in delay-1" style="position:relative;">
+        <div id="uploadLoading" class="loading-overlay hidden">
+          <div style="text-align:center;">
+            <div class="spinner" style="width:40px;height:40px;border-width:4px;margin:0 auto 1rem;"></div>
+            <p style="color:var(--text-secondary);">Clasificando con ResNet18...</p>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom:1.25rem;">Subir Imagen</h3>
+
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="imageInput" accept="image/*" onchange="handleFileSelected(this.files[0])" />
+          <p class="upload-text"><strong>Haz clic o arrastra</strong> una imagen aquí para procesar</p>
+          <p class="upload-text mt-1" style="font-size:0.78rem;">Formatos soportados: JPG, PNG, WebP · Máx 16 MB</p>
+        </div>
+
+        <img id="imagePreview" src="" alt="Preview" />
+
+        <div id="fileInfo" class="hidden" style="font-size:0.82rem;color:var(--text-muted);margin:0.75rem 0;text-align:center;"></div>
+
+        <button id="btnClassify" class="btn btn-danger btn-full mt-2" onclick="classifyImage()" disabled>
+          Clasificar Imagen
+        </button>
+
+        <hr class="divider" />
+        <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.6;">
+          <strong style="color:var(--text-secondary);">Modelo:</strong> ResNet18 (ImageNet) con fine-tuning en layer4 y cabeza de 5 clases.<br/>
+          <strong style="color:var(--text-secondary);">Entrenamiento:</strong> Entrenado sobre dataset real de Kaggle (400 imgs/clase), Adam, lr=1e-4.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── Results Panel ─────────────────────────────────────── -->
+    <div>
+      <div class="card animate-in delay-2" id="resultPanel">
+        <h3 style="margin-bottom:1rem;">Resultado</h3>
+
+        <div id="resultEmpty" style="text-align:center;padding:3rem 1rem;color:var(--text-muted);">
+          <p>Sube una imagen para ejecutar la clasificación computacional del modelo</p>
+        </div>
+
+        <div id="resultContent" class="hidden">
+          <div class="result-header">
+            <div>
+              <div class="result-class-name" id="predClass">—</div>
+              <div class="result-confidence">Confianza: <span id="predConf">—</span></div>
+            </div>
+          </div>
+
+          <h4 style="margin-bottom:1rem;font-size:0.9rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;">Distribución de probabilidades</h4>
+
+          <div id="probBars"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Classes Reference ───────────────────────────────── -->
+  <div class="card animate-in delay-3" style="margin-top:1.5rem;margin-bottom:3rem;">
+    <h3 class="mb-2">Referencia de Clases</h3>
+    <div class="class-grid">
+      {% for cls in classes %}
+      <div class="class-item">
+        <div>
+          <div class="class-item-id">Clase c{{ cls.id }}</div>
+          <div style="font-size:0.82rem; font-weight:500;">{{ cls.name }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <hr class="divider" />
+    <div class="grid-3" style="margin-top:0.5rem;">
+      <div style="font-size:0.82rem; line-height:1.6;">
+        <strong style="color:var(--accent-orange);">Curva de Aprendizaje y Métricas:</strong><br/>
+        <span class="text-secondary">El modelo alcanza un Accuracy global del 79.3% sobre el conjunto de validación real. El F1-Score Macro de 0.843 corrobora un rendimiento balanceado en la detección de clases minoritarias e intrincadas, minimizando los falsos negativos en conductas de alto riesgo como textear o hablar por teléfono al conducir.</span>
+      </div>
+      <div style="font-size:0.82rem; line-height:1.6;">
+        <strong style="color:var(--accent-orange);">Representatividad del Dataset:</strong><br/>
+        <span class="text-secondary">Entrenado sobre un subconjunto estadísticamente estratificado de 2,000 imágenes extraídas del dataset real "State Farm Distracted Driver Detection" (7,286 imágenes en total). Este balance asegura la convergencia computacional óptima y previene el sobreajuste hacia la clase mayoritaria de conducción segura.</span>
+      </div>
+      <div style="font-size:0.82rem; line-height:1.6;">
+        <strong style="color:var(--accent-orange);">Regularización y Robustez Visual:</strong><br/>
+        <span class="text-secondary">Se incorporan técnicas avanzadas de Data Augmentation durante el entrenamiento, incluyendo giros horizontales (HFlip), rotaciones de ±15° y fluctuaciones fotométricas con ColorJitter (brillo y contraste). Esto robustece la invarianza traslacional del modelo ResNet18 frente a variaciones de iluminación interna en cabina y oclusión parcial del rostro.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p><strong>Redes Neuronales Y Algoritmos Bioinspirados · Trabajo 3</strong> · Universidad Nacional Sede Medellín · 2026</p>
+</footer>
+
+<div id="class-data" data-classes='{{ classes | tojson }}' style="display: none;"></div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+const CLASS_DATA = JSON.parse(document.getElementById('class-data').dataset.classes);
+let selectedFile = null;
+
+function handleFileSelected(file) {
+  if (!file) return;
+  selectedFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('imagePreview');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    document.getElementById('fileInfo').textContent = `${file.name} · ${(file.size/1024).toFixed(1)} KB`;
+    document.getElementById('fileInfo').classList.remove('hidden');
+    document.getElementById('btnClassify').disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function classifyImage() {
+  if (!selectedFile) return;
+  const btn = document.getElementById('btnClassify');
+  setLoading(btn, true);
+  document.getElementById('uploadLoading').classList.remove('hidden');
+  document.getElementById('resultEmpty').classList.add('hidden');
+
+  const formData = new FormData();
+  formData.append('image', selectedFile);
+
+  try {
+    const res = await fetch('/api/classify_image', { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data.error) { showToast(data.error, 'error'); return; }
+    renderResult(data);
+    document.getElementById('resultContent').classList.remove('hidden');
+    showToast(`Clasificado: ${data.class_name}`, 'success');
+  } catch(e) {
+    showToast('Error al conectar con el servidor.', 'error');
+    document.getElementById('resultEmpty').classList.remove('hidden');
+  } finally {
+    setLoading(btn, false, 'Clasificar Imagen');
+    document.getElementById('uploadLoading').classList.add('hidden');
+  }
+}
+
+function renderResult(data) {
+  document.getElementById('predClass').textContent = data.class_name;
+  document.getElementById('predConf').textContent  = (data.confidence * 100).toFixed(1) + '%';
+
+  const container = document.getElementById('probBars');
+  container.innerHTML = '';
+
+  const sorted = CLASS_DATA
+    .map((c, i) => ({ ...c, prob: data.all_probabilities[i] }))
+    .sort((a, b) => b.prob - a.prob);
+
+  sorted.forEach(cls => {
+    const isTop = cls.id === data.predicted_class;
+    const pct = (cls.prob * 100).toFixed(1);
+    const row = document.createElement('div');
+    row.className = 'prob-bar-row';
+    row.innerHTML = `
+      <div class="prob-bar-label" title="${cls.name}">${cls.name}</div>
+      <div class="prob-bar-track">
+        <div class="prob-bar-fill ${isTop ? 'top' : ''}" style="width:0%" data-width="${cls.prob * 100}%"></div>
+      </div>
+      <div class="prob-bar-pct">${pct}%</div>
+    `;
+    container.appendChild(row);
+  });
+
+  // Animate bars
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.prob-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.width;
+    });
+  });
+}
+
+initDragDrop(document.getElementById('uploadZone'));
+</script>
+</body>
+</html>

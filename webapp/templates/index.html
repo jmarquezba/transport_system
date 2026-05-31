@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IRNA Trabajo 3 — IA para Turismo y Movilidad</title>
+  <meta name="description" content="Sistema de predicción de demanda, clasificación de conductores y recomendación de viajes con redes neuronales artificiales. Universidad Nacional de Colombia." />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+<!-- ── Navbar ─────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="nav-brand">
+      <div>
+        <span class="nav-brand-text">Redes Neuronales Y Algoritmos Bioinspirados - Trabajo 3</span>
+        <span class="nav-brand-sub">Universidad Nacional Sede Medellín</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Inicio</a></li>
+      <li><a href="/modulo1">Demanda</a></li>
+      <li><a href="/modulo2">Clasificación</a></li>
+      <li><a href="/modulo3">Recomendación</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── Hero ───────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-badge animate-in">UNIVERSIDAD NACIONAL SEDE MEDELLÍN · DEPARTAMENTO DE CIENCIAS DE LA COMPUTACIÓN Y DECISIÓN</div>
+  <h1 class="hero-title animate-in delay-1">
+    <span class="gradient-text">Redes Neuronales y Algoritmos Bioinspirados</span><br/>
+    Trabajo 3 — Sistemas Inteligentes de Movilidad y Turismo
+  </h1>
+  <p class="hero-subtitle animate-in delay-2">
+    Modelado avanzado con Redes Neuronales Artificiales aplicado a la predicción de demanda de transporte, clasificación de conducta de conductores y recomendación personalizada de destinos en Latinoamérica.
+  </p>
+  <div class="animate-in delay-3" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="/modulo1" class="btn btn-primary">Iniciar Panel de Módulos →</a>
+    <a href="https://github.com/jmarquezba/transport_system" target="_blank" class="btn btn-secondary">Repositorio Institucional</a>
+  </div>
+</section>
+
+<!-- Sección de estadísticas eliminada para refinamiento minimalista -->
+
+<!-- ── Module Cards ───────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <h2 class="text-center mb-2 animate-in">Módulos del Proyecto</h2>
+    <p class="text-center text-secondary mb-2 animate-in delay-1" style="max-width:600px;margin-inline:auto;">
+      Cada módulo integra un modelo de red neuronal entrenado con PyTorch y expuesto a través de esta interfaz web interactiva.
+    </p>
+
+    <div class="grid-3 mt-3">
+      <!-- M1 -->
+      <a href="/modulo1" class="card module-card m1 animate-in delay-1">
+        <h3>Módulo 1 · Predicción de Demanda</h3>
+        <p>Modelo LSTM de dos capas que predice la demanda diaria de transporte turístico para los principales destinos colombianos con un horizonte de 30 días.</p>
+        <div class="flex-between" style="margin-top:auto; padding-top:1rem;">
+          <span style="font-size:0.82rem;color:var(--text-muted);"><strong>Métricas:</strong> RMSE - MAE - MAPE</span>
+          <span style="color:var(--accent-purple);font-size:1.2rem;">→</span>
+        </div>
+      </a>
+
+      <!-- M2 -->
+      <a href="/modulo2" class="card module-card m2 animate-in delay-2">
+        <h3>Módulo 2 · Clasificación CNN</h3>
+        <p>ResNet18 con Transfer Learning que clasifica 5 categorías de conducción segura y distraída. Sube una imagen y obtén la categoría predicha con su nivel de confianza.</p>
+        <div class="flex-between" style="margin-top:auto; padding-top:1rem;">
+          <span style="font-size:0.82rem;color:var(--text-muted);"><strong>Métricas:</strong> F1 - Precision - Recall</span>
+          <span style="color:var(--accent-orange);font-size:1.2rem;">→</span>
+        </div>
+      </a>
+
+      <!-- M3 -->
+      <a href="/modulo3" class="card module-card m3 animate-in delay-3">
+        <h3>Módulo 3 · Recomendación NCF</h3>
+        <p>Neural Collaborative Filtering que aprende preferencias implícitas de usuarios y recomienda los 5 destinos turísticos latinoamericanos más afines a cada perfil.</p>
+        <div class="flex-between" style="margin-top:auto; padding-top:1rem;">
+          <span style="font-size:0.82rem;color:var(--text-muted);"><strong>Métricas:</strong> Precision@5 - NDCG@10</span>
+          <span style="color:var(--accent-cyan);font-size:1.2rem;">→</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Architecture Overview ──────────────────────────────── -->
+<section class="section" style="background:rgba(255,255,255,0.01);border-top:1px solid var(--border-light);border-bottom:1px solid var(--border-light);">
+  <div class="container">
+    <div class="grid-2">
+      <div class="animate-in">
+        <h2 class="mb-2">Arquitectura del Sistema</h2>
+        <p class="text-secondary" style="line-height:1.8;">
+          El proyecto implementa tres modelos independientes de redes neuronales, cada uno optimizado para su tarea específica:
+        </p>
+        <ul style="list-style:none;margin-top:1.5rem;display:flex;flex-direction:column;gap:1.25rem;">
+          <li style="display:flex;align-items:flex-start;gap:1rem;">
+            <span style="width:12px;height:12px;border-radius:3px;background:var(--accent-primary);margin-top:0.6rem;flex-shrink:0;"></span>
+            <div>
+              <strong>LSTM (Long Short-Term Memory)</strong><br/>
+              <span class="text-secondary" style="font-size:0.88rem; line-height:1.6; display:block; margin-top:0.25rem;">
+                Red Neuronal Recurrente (RNN) tipo LSTM con arquitectura de 2 capas apiladas y 64 unidades ocultas. Diseñada para procesar datos secuenciales de demanda de transporte con una ventana de observación (lookback) de 30 días históricos, incorporando regularización por Dropout (0.2) y detención temprana (early stopping) con paciencia de 10 épocas para evitar el sobreajuste.
+              </span>
+            </div>
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:1rem;">
+            <span style="width:12px;height:12px;border-radius:3px;background:var(--accent-red);margin-top:0.6rem;flex-shrink:0;"></span>
+            <div>
+              <strong>ResNet18 con Transfer Learning</strong><br/>
+              <span class="text-secondary" style="font-size:0.88rem; line-height:1.6; display:block; margin-top:0.25rem;">
+                Red Neuronal Convolucional (CNN) basada en la arquitectura ResNet18 preentrenada con ImageNet. Se aplica ajuste fino (fine-tuning) en el bloque residual final (<code>layer4</code>) y se reemplaza la capa completamente conectada (<code>fc</code>) por un cabezal de clasificación personalizado con capas densas (512 → Dropout 0.5 → 256 → ReLU → BatchNorm → Dropout 0.3 → 5 neuronas de salida) para clasificar conductas distraídas con precisión óptima.
+              </span>
+            </div>
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:1rem;">
+            <span style="width:12px;height:12px;border-radius:3px;background:var(--accent-gold);margin-top:0.6rem;flex-shrink:0;"></span>
+            <div>
+              <strong>NCF (Neural Collaborative Filtering)</strong><br/>
+              <span class="text-secondary" style="font-size:0.88rem; line-height:1.6; display:block; margin-top:0.25rem;">
+                Modelo de Recomendación basado en Aprendizaje Profundo que combina Filtrado Colaborativo y perceptrones multicapa (MLP). Utiliza capas de Embeddings de 32 dimensiones para mapear la afinidad latente entre usuarios y destinos de viaje. Entrenado bajo una función de pérdida de entropía cruzada binaria (BCE Loss) y muestreo negativo (negative sampling) con relación 4:1 para optimizar el ranking personalizado.
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="animate-in delay-2">
+        <div class="card" style="height:100%;">
+          <h3 class="mb-2">Métricas de Evaluación</h3>
+          <hr class="divider" />
+          <div style="display:flex;flex-direction:column;gap:1.25rem;">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                <span class="text-secondary" style="font-size:0.82rem;">M1 · MAPE Promedio</span>
+                <span style="font-family:'JetBrains Mono',monospace;color:var(--accent-purple);font-weight:700;">~11.6%</span>
+              </div>
+              <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+                <div style="width:88.4%;height:100%;background:var(--gradient-m1);border-radius:3px;"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                <span class="text-secondary" style="font-size:0.82rem;">M2 · F1-Score Macro</span>
+                <span style="font-family:'JetBrains Mono',monospace;color:var(--accent-orange);font-weight:700;">0.843</span>
+              </div>
+              <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+                <div style="width:84.3%;height:100%;background:var(--gradient-m2);border-radius:3px;"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                <span class="text-secondary" style="font-size:0.82rem;">M3 · NDCG@10</span>
+                <span style="font-family:'JetBrains Mono',monospace;color:var(--accent-cyan);font-weight:700;">0.463</span>
+              </div>
+              <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+                <div style="width:46.3%;height:100%;background:var(--gradient-m3);border-radius:3px;"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                <span class="text-secondary" style="font-size:0.82rem;">M3 · Precision@5</span>
+                <span style="font-family:'JetBrains Mono',monospace;color:var(--accent-green);font-weight:700;">0.384</span>
+              </div>
+              <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+                <div style="width:38.4%;height:100%;background:linear-gradient(135deg,#00f5a0,#00d2ff);border-radius:3px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Team Section ────────────────────────────────────────── -->
+<section class="section" style="background:rgba(255,255,255,0.015); border-top:1px solid var(--border-light); padding: 3.5rem 0;">
+  <div class="container text-center animate-in">
+    <h3 class="mb-2" style="font-family:'Lora', serif; font-size:1.6rem; color:var(--accent-dark);">Integrantes del Equipo</h3>
+    <p class="text-secondary mb-3" style="max-width:600px; margin-inline:auto; font-size:0.95rem;">
+      Estudiantes del curso de Redes Neuronales y Algoritmos Bioinspirados
+    </p>
+    <div style="display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap; margin-top:1.5rem;">
+      <div style="background:var(--bg-card); border:1px solid rgba(0, 102, 51, 0.1); border-radius:4px; padding:1rem 2rem; font-weight:600; color:var(--accent-dark); box-shadow:var(--shadow-card);">
+        Juan Miguel Márquez Barón
+      </div>
+      <div style="background:var(--bg-card); border:1px solid rgba(0, 102, 51, 0.1); border-radius:4px; padding:1rem 2rem; font-weight:600; color:var(--accent-dark); box-shadow:var(--shadow-card);">
+        Santiago Castilla Ospina
+      </div>
+      <div style="background:var(--bg-card); border:1px solid rgba(0, 102, 51, 0.1); border-radius:4px; padding:1rem 2rem; font-weight:600; color:var(--accent-dark); box-shadow:var(--shadow-card);">
+        Simón Cardona Yepes
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ──────────────────────────────────────────────── -->
+<footer>
+  <p><strong>Redes Neuronales Y Algoritmos Bioinspirados · Trabajo 3</strong> · Universidad Nacional Sede Medellín · 2026</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
