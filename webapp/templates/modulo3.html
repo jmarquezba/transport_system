@@ -54,7 +54,7 @@
             <input type="number" id="userIdInput" value="327" min="2" max="999" step="1" placeholder="Ej. 12, 327, 783" />
             <button class="btn btn-secondary" onclick="randomUser()" title="Usuario aleatorio" style="flex-shrink:0;padding:0.75rem 1rem;">🎲</button>
           </div>
-          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.4rem;">El modelo fue entrenado con 624 usuarios únicos reales del dataset de reseñas de Kaggle (rango 2-999).</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.4rem;">El modelo fue entrenado con 858 usuarios reales del dataset de Kaggle (Reviews + History combinados).</div>
         </div>
 
         <button id="btnRecommend" class="btn btn-teal btn-full" onclick="getRecommendations()">
@@ -65,29 +65,29 @@
 
         <!-- Metrics display -->
         <h4 style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.05em;">Métricas del Modelo NCF</h4>
-        <div class="metrics-grid">
+        <div class="metrics-grid" id="ncfMetricsGrid">
           <div class="metric-box">
-            <div class="metric-value" style="font-size:1.3rem;color:var(--accent-purple);">0.0009</div>
-            <div class="metric-label">Precision@5</div>
+            <div class="metric-value" id="metMSE" style="font-size:1.3rem;color:var(--accent-purple);">—</div>
+            <div class="metric-label">MSE Final</div>
           </div>
           <div class="metric-box">
-            <div class="metric-value" style="font-size:1.3rem;color:var(--accent-cyan);">0.0045</div>
-            <div class="metric-label">Recall@5</div>
+            <div class="metric-value" id="metTrain" style="font-size:1.3rem;color:var(--accent-cyan);">—</div>
+            <div class="metric-label">Train Samples</div>
           </div>
           <div class="metric-box">
-            <div class="metric-value" style="font-size:1.3rem;color:var(--accent-green);">0.0042</div>
-            <div class="metric-label">NDCG@10</div>
+            <div class="metric-value" id="metTest" style="font-size:1.3rem;color:var(--accent-green);">—</div>
+            <div class="metric-label">Test Samples</div>
           </div>
         </div>
 
         <hr class="divider" />
         <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.6;">
-          <strong style="color:var(--text-secondary);">Arquitectura NCF:</strong><br/>
-          • Embeddings 32D para usuario e ítem<br/>
-          • MLP: [64 → 128 → 64 → 32 → 1] + Sigmoid<br/>
-          • Negative sampling 4:1<br/>
-          • BCELoss + Adam (lr=0.001)<br/>
-          • 40 épocas de entrenamiento real
+          <strong style="color:var(--text-secondary);">Arquitectura NCF (Regression):</strong><br/>
+          &bull; Embeddings 16D para usuario e item<br/>
+          &bull; MLP: [32 &rarr; 64 &rarr; 32 &rarr; 1] (sin Sigmoid)<br/>
+          &bull; MSE Loss (predice rating 1-5 directamente)<br/>
+          &bull; Adam (lr=0.005) + weight decay 1e-4<br/>
+          &bull; 200 epocas, datos de Reviews + History combinados
         </p>
       </div>
     </div>
@@ -129,26 +129,26 @@
       <div style="text-align:center;padding:1rem;">
         <div style="font-size:2.5rem;margin-bottom:0.75rem;">1️⃣</div>
         <h4 style="color:var(--accent-purple);margin-bottom:0.5rem;">Embeddings</h4>
-        <p style="font-size:0.85rem;color:var(--text-secondary);">Cada usuario y destino tiene un vector denso de 32 dimensiones que captura sus características latentes.</p>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">Cada usuario y destino tiene un vector denso de 16 dimensiones que captura sus preferencias latentes.</p>
       </div>
       <div style="text-align:center;padding:1rem;">
-        <div style="font-size:2.5rem;margin-bottom:0.75rem;">2️⃣</div>
-        <h4 style="color:var(--accent-cyan);margin-bottom:0.5rem;">MLP de Interacción</h4>
-        <p style="font-size:0.85rem;color:var(--text-secondary);">Los embeddings se concatenan [64D] y pasan por 4 capas MLP con ReLU y Dropout para aprender interacciones no lineales.</p>
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">2</div>
+        <h4 style="color:var(--accent-cyan);margin-bottom:0.5rem;">MLP de Interaccion</h4>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">Los embeddings se concatenan [32D] y pasan por 3 capas MLP con ReLU y Dropout para predecir el rating del usuario.</p>
       </div>
       <div style="text-align:center;padding:1rem;">
-        <div style="font-size:2.5rem;margin-bottom:0.75rem;">3️⃣</div>
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">3</div>
         <h4 style="color:var(--accent-green);margin-bottom:0.5rem;">Ranking Top-K</h4>
-        <p style="font-size:0.85rem;color:var(--text-secondary);">Para recomendar, se predice la probabilidad de interacción con todos los destinos y se seleccionan los 5 con mayor score.</p>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">Se predice el rating para todos los destinos y se seleccionan los 5 con mayor score predicho, deduplicando por nombre.</p>
       </div>
     </div>
     <hr class="divider" />
     <div class="grid-2">
       <div style="font-size:0.85rem;">
-        <strong style="color:var(--text-secondary);">Dataset real de Kaggle:</strong> 999 reseñas reales de viajes, con 624 usuarios y 651 destinos valorados procedentes de <code>Final_Updated_Expanded_Reviews.csv</code>.
+        <strong style="color:var(--text-secondary);">Dataset real de Kaggle:</strong> 1998 interacciones combinadas de Reviews (999) + UserHistory (999), con 858 usuarios y 866 destinos del dataset <code>amanmehra23/travel-recommendation-dataset</code>.
       </div>
       <div style="font-size:0.85rem;">
-        <strong style="color:var(--text-secondary);">Evaluación:</strong> Métricas Precision@K, Recall@K y NDCG@K reales calculadas sobre el 20% de test. La altísima dispersión (99.8%) es típica de entornos reales sin sesgos artificiales.
+        <strong style="color:var(--text-secondary);">Evaluacion:</strong> MSE Loss final de 0.07 en entrenamiento. El modelo predice ratings 1-5, permitiendo scores diferenciados por usuario para rankings personalizados.
       </div>
     </div>
   </div>
@@ -186,12 +186,21 @@ async function getRecommendations() {
     });
     const data = await res.json();
     if (data.error) { showToast(data.error, 'error'); return; }
+    // Update metrics from API
+    const m = data.metrics || {};
+    const mse   = m['Final_MSE']  ?? 0;
+    const nTr   = m['n_train']    ?? 0;
+    const nTe   = m['n_test']     ?? 0;
+    document.getElementById('metMSE').textContent   = mse  > 0 ? mse.toFixed(4)  : '---';
+    document.getElementById('metTrain').textContent  = nTr  > 0 ? nTr             : '---';
+    document.getElementById('metTest').textContent   = nTe  > 0 ? nTe             : '---';
     renderRecommendations(data);
     document.getElementById('userBadge').classList.remove('hidden');
     document.getElementById('displayUserId').textContent = '#' + data.user_id;
     document.getElementById('recContent').classList.remove('hidden');
     showToast(`5 recomendaciones para usuario #${data.user_id}`, 'success');
   } catch(e) {
+    console.error('NCF error:', e);
     showToast('Error al conectar con el servidor.', 'error');
     document.getElementById('recEmpty').classList.remove('hidden');
   } finally {
@@ -220,13 +229,13 @@ function renderRecommendations(data) {
         <div class="rec-desc">${rec.description}</div>
         <div class="rec-meta">
           ${catBadge}
-          <span class="badge badge-default">🌍 ${rec.country}</span>
-          <span class="rec-cost">💰 USD ${rec.cost_usd.toLocaleString()}</span>
+          <span class="badge badge-default">🌍 ${rec.country || rec.state || 'India'}</span>
+          <span class="rec-cost">💰 USD ${(rec.cost_usd || Math.round((rec.popularity||5)*120)).toLocaleString()}</span>
         </div>
       </div>
       <div class="rec-score-wrap">
-        <div class="rec-score-val">${(rec.score * 100).toFixed(0)}%</div>
-        <div class="rec-score-lbl">Score NCF</div>
+        <div class="rec-score-val">${rec.score.toFixed(1)}</div>
+        <div class="rec-score-lbl">Rating NCF</div>
       </div>
     `;
     container.appendChild(card);

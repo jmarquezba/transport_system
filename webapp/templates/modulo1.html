@@ -64,7 +64,7 @@
         <div class="form-group">
           <label>Horizonte de pronóstico</label>
           <div style="padding:0.75rem 1rem;background:rgba(255,255,255,0.04);border:1px solid var(--border-light);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:0.9rem;">
-            30 días (fijo — ventana autorregresiva LSTM)
+            30 dias (prediccion directa Seq2Seq LSTM)
           </div>
         </div>
 
@@ -76,12 +76,12 @@
 
         <div>
           <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.6;">
-            <strong style="color:var(--text-secondary);">Arquitectura LSTM:</strong><br/>
-            • 2 capas LSTM apiladas (hidden=64)<br/>
-            • Ventana deslizante: 30 días<br/>
-            • MinMaxScaler por destino<br/>
-            • Early stopping (patience=10)<br/>
-            • Pronóstico autorregresivo
+            <strong style="color:var(--text-secondary);">Arquitectura Seq2Seq LSTM:</strong><br/>
+            &bull; Encoder: 3 capas LSTM apiladas (hidden=128)<br/>
+            &bull; Decoder: MLP [128 &rarr; 64 &rarr; 30] con GELU<br/>
+            &bull; Ventana de entrada: 60 dias con features temporales<br/>
+            &bull; Prediccion directa de 30 dias (sin autoregresion)<br/>
+            &bull; HuberLoss + AdamW + OneCycleLR + Early stopping
           </p>
         </div>
       </div>
@@ -220,11 +220,12 @@ function renderDemandChart(data) {
   const ctx = document.getElementById('demandChart').getContext('2d');
   if (demandChart) demandChart.destroy();
 
+  const nHist = data.historical.length;
   const labels = [...data.dates_hist, ...data.dates_fore];
   const histData = [...data.historical, ...Array(30).fill(null)];
-  const foreData = [...Array(60).fill(null), ...data.forecast];
-  // Overlap point
-  foreData[59] = data.historical[59];
+  const foreData = [...Array(nHist).fill(null), ...data.forecast];
+  // Overlap point: connect last historical to first forecast
+  foreData[nHist - 1] = data.historical[nHist - 1];
 
   demandChart = new Chart(ctx, {
     type: 'line',

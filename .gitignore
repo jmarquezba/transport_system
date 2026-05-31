@@ -68,3 +68,4 @@ kaggle.json
 # (overrides de las reglas *.pt / *.pkl arriba)
 !webapp/models/*.pt
 !webapp/models/*.pkl
+scratch/

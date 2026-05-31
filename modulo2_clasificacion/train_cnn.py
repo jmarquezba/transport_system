@@ -24,7 +24,7 @@ from sklearn.metrics import (accuracy_score, f1_score, precision_score,
 SEED = 42
 np.random.seed(SEED); torch.manual_seed(SEED)
 
-EPOCHS = 25; BATCH_SIZE = 32; LR = 1e-4; IMG_SIZE = 224; PATIENCE = 6
+EPOCHS = 15; BATCH_SIZE = 32; LR = 1e-4; IMG_SIZE = 224; PATIENCE = 4
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Dispositivo: {device}")
 
@@ -127,8 +127,9 @@ def build_model(num_classes: int) -> nn.Module:
         model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
     except Exception:
         model = models.resnet18(pretrained=True)
+    # Entrenar layer4 + fc para buena precisión con velocidad razonable
     for name, param in model.named_parameters():
-        param.requires_grad = any(k in name for k in ["layer3", "layer4", "fc"])
+        param.requires_grad = any(k in name for k in ["layer4", "fc"])
     model.fc = nn.Sequential(
         nn.Dropout(0.5),
         nn.Linear(model.fc.in_features, 256),
